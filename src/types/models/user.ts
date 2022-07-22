@@ -1,11 +1,12 @@
 export interface IUser {
   name: string;
   sex: 'female' | 'male';
-  birth: Date;
+  birth: string;
   region: string;
   phone: number;
   email: string;
   transportation: transport[];
+  win: boolean;
 }
 
 type transport = [
@@ -18,3 +19,8 @@ type transport = [
   | '전동킥보드'
   | '자가용',
 ];
+
+export interface IAdmin extends IUser {
+  readonly id: number;
+  date: string;
+}
