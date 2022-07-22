@@ -5,7 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import GlobalStyle from '@styles/GlobalStyle';
 import theme from '@styles/theme';
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
@@ -15,5 +15,3 @@ function App() {
     </BrowserRouter>
   );
 }
-
-export default App;
