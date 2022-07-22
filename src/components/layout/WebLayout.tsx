@@ -1,23 +1,20 @@
 import React from 'react';
+import { Outlet } from 'react-router';
 import styled from 'styled-components';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-function Layout({ children }: LayoutProps) {
+export default function WebLayout() {
   return (
-    <LayoutContainer>
+    <WebLayoutContainer>
       <Header />
       <SideBar />
-      <Main>{children}</Main>
-    </LayoutContainer>
+      <Main>
+        <Outlet />
+      </Main>
+    </WebLayoutContainer>
   );
 }
 
-export default Layout;
-
-const LayoutContainer = styled.div`
+const WebLayoutContainer = styled.div`
   display: grid;
   position: fixed;
   width: 100%;
