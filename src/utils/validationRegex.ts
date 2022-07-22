@@ -1,4 +1,4 @@
-import { IField } from '../types/models/Fields';
+import { IField } from '../types/models/form';
 import RegexException from './RegexException';
 
 const isEmptyString = (content: unknown) => {

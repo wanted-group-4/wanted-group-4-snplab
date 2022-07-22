@@ -1,4 +1,4 @@
-import { IField } from '../types/models/Fields';
+import { IField } from '../types/models/form';
 
 class RegexException extends Error {
   _statusCode: number;
