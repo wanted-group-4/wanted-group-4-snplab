@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-function Home() {
+export default function Home() {
   return (
     <HomeContainer>
       <StyledLink to="user">User</StyledLink>
@@ -10,8 +10,6 @@ function Home() {
     </HomeContainer>
   );
 }
-
-export default Home;
 
 const HomeContainer = styled.div`
   width: 30vw;
