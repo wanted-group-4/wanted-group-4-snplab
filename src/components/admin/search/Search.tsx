@@ -4,7 +4,7 @@ import { BsSearch } from 'react-icons/bs';
 
 import Select from '@components/admin/search/Select';
 
-function Search() {
+export default function Search() {
   return (
     <SearchContainer>
       <Select />
@@ -16,8 +16,6 @@ function Search() {
     </SearchContainer>
   );
 }
-
-export default Search;
 
 const SearchContainer = styled.div`
   width: 500px;

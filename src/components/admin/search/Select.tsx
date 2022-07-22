@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function Select() {
+export default function Select() {
   const searchSelectOptionList = [
     ['지원날짜', 'date'],
     ['지원자명', 'name'],
@@ -20,8 +20,6 @@ function Select() {
     </SelectContainer>
   );
 }
-
-export default Select;
 
 const SelectContainer = styled.select`
   width: 80px;

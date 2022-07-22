@@ -1,11 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Download = () => {
+export default function Download() {
   return <DownloadContainer>CSV 다운로드</DownloadContainer>;
-};
-
-export default Download;
+}
 
 const DownloadContainer = styled.div`
   width: 180px;
