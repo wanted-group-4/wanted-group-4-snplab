@@ -1,7 +1,8 @@
-import React from "react";
+import Layout from 'components/layout/Layout';
+import React from 'react';
 
 function Admin() {
-  return <div>admin</div>;
+  return <Layout>Admin</Layout>;
 }
 
 export default Admin;
