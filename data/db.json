@@ -1,10 +1,8 @@
-{  
-  "users": [
-    { 
-    "round": 1,
-    "data": [ 
+{ 
+  "users": [ 
       {
         "id": 1,
+        "round": 1,
         "date": "2022.07.22",
         "name": "지혜인",
         "sex": "female",
@@ -17,6 +15,7 @@
       },
       {
         "id": 2,
+        "round": 1,
         "date": "2022.07.22",
         "name": "지인혜",
         "sex": "female",
@@ -29,6 +28,7 @@
       },
       {
         "id": 3,
+        "round": 1,
         "date": "2022.07.22",
         "name": "김철수",
         "sex": "male",
@@ -38,14 +38,10 @@
         "transportation": ["버스", "지하철", "택시", "KTX/기차"],
         "region": "서울 강남구",
         "win": true
-      }
-    ]
-  },
-  { 
-    "round": 2,
-    "data": [ 
+      },
       {
         "id": 4,
+        "round": 2,
         "date": "2022.07.23",
         "name": "김코디",
         "sex": "female",
@@ -58,6 +54,7 @@
       },
       {
         "id": 5,
+        "round": 2,
         "date": "2022.07.23",
         "name": "박해커",
         "sex": "female",
@@ -70,6 +67,7 @@
       },
       {
         "id": 3,
+        "round": 2,
         "date": "2022.07.23",
         "name": "김수철",
         "sex": "male",
@@ -80,9 +78,7 @@
         "region": "서울 강남구",
         "win": false
       }
-    ]
-  }
-],
+    ],
   "region": [
     {
     "area": "서울특별시",
