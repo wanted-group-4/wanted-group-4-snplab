@@ -1,7 +1,18 @@
 import React from 'react';
+import styled from 'styled-components';
 
-function ApplicantContainer() {
-  return <div>ApplicantContainer</div>;
+import ApplicantList from '@components/applicant/ApplicantList';
+
+function ApplicantConainer() {
+  return (
+    <ApplicantWrapper>
+      <ApplicantList />
+    </ApplicantWrapper>
+  );
 }
 
-export default ApplicantContainer;
+const ApplicantWrapper = styled.div`
+  width: 100%;
+`;
+
+export default ApplicantConainer;
