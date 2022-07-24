@@ -2,7 +2,15 @@ import axios from 'axios';
 import { useQuery, useMutation } from 'react-query';
 import { BASE_URL } from '@api/index';
 
+// 탭별 모든 유저 정보 가져오기(페이지네이션)
+const fetchInfo = ({ queryKey }) => {
+  const round = queryKey[1];
+  return axios.get(`${BASE_URL}/users?round=${round}`);
+};
 
+export const getUserInfo = (round = 1) => {
+  return useQuery(['userInfoStore', round], fetchInfo);
+};
 // 당첨여부 (수정해야합니다..)
 // const updatedWinStatus = (id, winStatus) => {
 //   return axios.patch(`${BASE_URL}/users/${id}/win`, winStatus);
