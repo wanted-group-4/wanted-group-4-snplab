@@ -1,22 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 
-function ApplicantList() {
-  const [data, setData] = React.useState([]);
-  const [keyList, setKeyList] = React.useState<Array<string>>([]);
+import { IUser } from '@type/models/user';
 
-  React.useEffect(() => {
-    async function getUserData() {
-      const userData = await axios.get('/db.json');
-      setData(userData.data.users);
+interface IApplicantList {
+  userList: IUser[];
+  keyList: string[];
+}
 
-      const keyData = Object.keys(userData.data.users[0]);
-      setKeyList(keyData);
-    }
-    getUserData();
-  }, []);
+interface IUserObject {
+  [key: string]: any;
+}
 
+function ApplicantList({ userList, keyList }: IApplicantList) {
   const titleList: string[] = [
     'Num.',
     '지원날짜',
@@ -40,15 +36,15 @@ function ApplicantList() {
         </ListTableHeadTR>
       </ListTableHead>
       <ListTableBody>
-        {data.map((object, index) => (
+        {userList.map((user: IUserObject, index: number) => (
           <ListTableBodyTR key={index}>
             {keyList.length > 0 &&
-              keyList.map((item, index) => {
-                const value = object[item];
+              keyList.map((item: string, index: number) => {
+                const value = user[item];
                 if (item === 'win') {
                   return (
                     <ListTableTD key={index}>
-                      {object[item] ? (
+                      {user[item] ? (
                         <input type="checkbox" defaultChecked />
                       ) : (
                         <input type="checkbox" />
@@ -90,6 +86,7 @@ const ListTableTH = styled.th`
   :not(:last-of-type) {
     border-right: 1px solid ${({ theme }) => theme.color.grey_01};
   }
+
   :first-of-type {
     width: 1%;
     white-space: nowrap;
@@ -98,9 +95,7 @@ const ListTableTH = styled.th`
 
 const ListTableBody = styled.tbody``;
 
-const ListTableBodyTR = styled.tr`
-  background: #f3f3f3;
-`;
+const ListTableBodyTR = styled.tr``;
 
 const ListTableTD = styled.td`
   padding: 2px;
