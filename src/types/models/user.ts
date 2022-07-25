@@ -1,5 +1,6 @@
 export interface IUser {
   round: number;
+  date: string;
   name: string;
   gender: 'female' | 'male';
   birth: string;
@@ -22,5 +23,4 @@ type transport =
 
 export interface IAdmin extends IUser {
   readonly id: number;
-  date: string;
 }
