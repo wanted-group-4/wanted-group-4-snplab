@@ -1,17 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import TermsDetail from '@components/terms/TermsDetail';
+
+const transportList = [
+  '버스',
+  '지하철',
+  '택시',
+  'KTX/기차',
+  '도보',
+  '자전거',
+  '전동킥보드',
+  '자가용',
+];
+
+const TERMS1 = 'terms1';
+const TERMS2 = 'terms2';
 
 export default function User() {
-  const transportList = [
-    '버스',
-    '지하철',
-    '택시',
-    'KTX/기차',
-    '도보',
-    '자전거',
-    '전동킥보드',
-    '자가용',
-  ];
+  const [isClickTerms1, setIsClickTerms1] = useState(false);
+  const [isClickTerms2, setIsClickTerms2] = useState(false);
+
+  const handleBackButtonClick = (value: string) => {
+    if (value === TERMS1) {
+      setIsClickTerms1(false);
+    }
+
+    if (value === TERMS2) {
+      setIsClickTerms2(false);
+    }
+  };
+
+  const handleTermsDetailClick = (value: string) => {
+    if (value === TERMS1) {
+      setIsClickTerms1(true);
+    }
+
+    if (value === TERMS2) {
+      setIsClickTerms2(true);
+    }
+  };
 
   return (
     <UserContainer>
@@ -30,7 +58,28 @@ export default function User() {
             </Label>
             <Label>
               <span>성별</span>
-              <input type="text" required placeholder="홍길동" />
+              <RadioWrap>
+                <Radio>
+                  <input type="radio" value="여자" />
+                  여자
+                </Radio>
+                <Radio>
+                  <input type="radio" value="남자" />
+                  남자
+                </Radio>
+              </RadioWrap>
+            </Label>
+            <Label>
+              <span>거주지역</span>
+              <input type="text" required placeholder="거주지역" />
+            </Label>
+            <Label>
+              <span>연락처</span>
+              <input
+                type="text"
+                required
+                placeholder="'-'없이 입력해 주세요."
+              />
             </Label>
             <Label>
               <span>생년월일</span>
@@ -64,12 +113,18 @@ export default function User() {
                 <input type="checkbox" required />
                 <span>개인정보 처리방침 고지 (필수)</span>
               </label>
+              <ICon onClick={() => handleTermsDetailClick(TERMS1)}>
+                <MdKeyboardArrowRight size={18} />
+              </ICon>
             </AgreementRequired>
             <AgreementRequired>
               <label>
                 <input type="checkbox" required />
                 <span>제3자 정보제공 동의 (필수)</span>
               </label>
+              <ICon onClick={() => handleTermsDetailClick(TERMS2)}>
+                <MdKeyboardArrowRight size={18} />
+              </ICon>
             </AgreementRequired>
           </TermsWrap>
           <SubmitWrap>
@@ -77,11 +132,24 @@ export default function User() {
           </SubmitWrap>
         </Form>
       </UserWrap>
+      {isClickTerms1 && (
+        <TermsDetail
+          handleBackButtonClick={handleBackButtonClick}
+          title={TERMS1}
+        />
+      )}
+      {isClickTerms2 && (
+        <TermsDetail
+          handleBackButtonClick={handleBackButtonClick}
+          title={TERMS2}
+        />
+      )}
     </UserContainer>
   );
 }
 
 const UserContainer = styled.div`
+  position: relative;
   width: 100%;
   min-height: 100vh;
   border: 1px solid #ccc;
@@ -121,6 +189,20 @@ const InfoWrap = styled.div`
   flex-direction: column;
   margin-bottom: 30px;
   gap: 30px 0;
+`;
+
+const RadioWrap = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+const Radio = styled.div`
+  & + & {
+    margin-left: 100px;
+  }
+  input {
+    margin-right: 10px;
+  }
 `;
 
 const Label = styled.label`
@@ -189,7 +271,10 @@ const AgreementAll = styled.div`
     line-height: 23px;
   }
 `;
+
 const AgreementRequired = styled.div`
+  display: flex;
+  justify-content: space-between;
   margin-top: 15px;
   input {
     margin-right: 20px;
@@ -198,6 +283,10 @@ const AgreementRequired = styled.div`
     font-size: 16px;
     line-height: 23px;
   }
+`;
+
+const ICon = styled.div`
+  cursor: pointer;
 `;
 
 const SubmitWrap = styled.div`

@@ -6,6 +6,7 @@
       "@routes/*": ["src/routes/*"],
       "@api/*": ["src/api/*"],
       "@components/*": ["src/components/*"],
+      "@assets/*": ["src/assets/*"],
       "@pages/*": ["src/pages/*"],
       "@styles/*": ["src/styles/*"],
       "@type/*": ["src/types/*"],
@@ -14,5 +15,3 @@
     }
   }
 }
-
-

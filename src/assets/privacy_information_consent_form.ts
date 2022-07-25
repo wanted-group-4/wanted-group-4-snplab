@@ -1,17 +1,6 @@
-export const personalInfoConsentPolicy = {
-  
-  personalInfoConsent : 
-  `<!DOCTYPE html
+export const personalInfoConsentPolicy = `<!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
-
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
-  <title>개인정보처리방침</title>
-</head>
-
 <body>
   <p>
   <p class="ls2 lh6 bs5 ts4"><em class="emphasis">
@@ -31,22 +20,6 @@ export const personalInfoConsentPolicy = {
   </ul><br /><br />
   <p class="lh6 bs4"><strong>제2조(개인정보 영향평가 수행결과)</strong></p>
   <p class="ls2"><br /><br /></p></br></br>
-</body>
-</html>
-`,
-
-thirdPartyInfoConsent: 
-`<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
-
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
-  <title>제3자 정보제공 동의</title>
-</head>
-  <body>
   <p class='lh6 bs4'><strong>제3조(개인정보의 제3자 제공에 관한 사항)</strong></br></br> ① <em class="emphasis">
       < wanted-preonboarding-group-4>은(는) 개인정보를 제1조(개인정보의 처리 목적)에서 명시한 범위 내에서만 처리하며, 정보주체의 동의, 법률의 특별한 규정 등 「개인정보 보호법」
         제17조 및 제18조에 해당하는 경우에만 개인정보를 제3자에게 제공합니다.</p>
@@ -154,7 +127,5 @@ thirdPartyInfoConsent:
   <p class='sub_p'>예시 ) - 20XX. X. X ~ 20XX. X. X 적용 (클릭)</p>
   </p>
 </body>
-
 </html>
-`
-}
+`;
