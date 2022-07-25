@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Search from '@components/admin/search/Search';
 import Download from '@components/admin/Download';
 import ApplicantContainer from '@components/applicant/ApplicantContainer';
+import useAdminQueries from '@src/hooks/useAdminQueries';
 
 export interface IFilter {
   type: string;
@@ -11,17 +12,18 @@ export interface IFilter {
 }
 
 export default function Admin() {
-  const [filter, setFilter] = useState<IFilter>();
+  const [filter, setFilter] = useState<IFilter>({
+    type: 'select',
+    condition: '',
+  });
   const [round, setRound] = useState<number>(1);
+
+  const { data } = useAdminQueries(filter, round);
 
   const handleFilter = (value: IFilter) => {
     setFilter(value);
   };
 
-  const data = [
-    { name: '지혜인', gender: 'female', birth: '1998.01.01' },
-    { name: '지혜인', gender: 'female', birth: '1998.01.01' },
-  ];
   return (
     <>
       <AdminContainer>

@@ -1,8 +1,9 @@
+import { IAdmin } from '@src/types/models/user';
 import React from 'react';
 import styled from 'styled-components';
 
 interface DownloadProps {
-  data: { [key: string]: string }[];
+  data: IAdmin[];
 }
 
 export default function Download({ data }: DownloadProps) {
@@ -16,14 +17,15 @@ export default function Download({ data }: DownloadProps) {
     link.click();
   };
 
-  const changeFormatCsvData = (data: { [key: string]: string }[]) => {
+  const changeFormatCsvData = (data: IAdmin[]) => {
     const row: string[] = [];
     const header = Object.keys(data[0]);
     row.push(header.join(','));
 
     data.map(item => {
-      const value = Object.values(item).join(',');
-      row.push(value);
+      const value = Object.values(item);
+      value[8] = `"${value[8].join(',')}"`;
+      row.push(value.join(','));
     });
 
     return row.join('\n');
