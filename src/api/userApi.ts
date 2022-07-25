@@ -5,8 +5,9 @@ import { BASE_URL } from '@api/index';
 import format from 'date-fns/format';
 
 // 모든 지역 가져오기
-const fetchRegion = () => {
-  return axios.get(`${BASE_URL}/region`);
+const fetchRegion = async () => {
+  const response = await axios.get(`${BASE_URL}/region`);
+  return response.data;
 };
 
 export const getRegion = () => {
@@ -14,9 +15,10 @@ export const getRegion = () => {
 };
 
 // 지역 선택해서 가져오기
-const fetchArea = ({ queryKey }) => {
+const fetchArea = async ({ queryKey }) => {
   const area = queryKey[1];
-  axios.get(`${BASE_URL}/region?area=${area}`);
+  const response = await axios.get(`${BASE_URL}/region?area=${area}`);
+  return response;
 };
 
 export const getRegionByArea = (area: string) => {
@@ -24,12 +26,7 @@ export const getRegionByArea = (area: string) => {
 };
 
 // 유저 저장 post (saveUserInfo.mutation({정보}))
-// const createUserInfo = (userInfo: IUser) => {
-//   return axios.post(`${BASE_URL}/users`, userInfo);
-// };
-
-// export const userInfoMutation = userInfo => {
-//   userInfo.date = format(userInfo.date, 'yyyy.MM.dd');
-//   const mutation = useMutation(createUserInfo(userInfo));
-//   return mutation.mutate(userInfo);
-// };
+export const userInfoMutation = () =>
+  useMutation((userInfo: IUser) => {
+    return axios.post(`${BASE_URL}/users`, userInfo);
+  });
