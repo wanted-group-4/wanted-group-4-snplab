@@ -37,6 +37,9 @@ const changeDate = (value: string) => {
   date.map(item => {
     validateDate(item);
   });
+
+  if (date.length === 1) return [date[0], date[0]];
+
   return date;
 };
 const chagneGender = (value: string) => {
