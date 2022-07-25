@@ -12,16 +12,6 @@ function ApplicantTableRow({ user }: any) {
   const handleWinStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(tableRowRef.current.outerText);
     console.log(e.target.checked);
-    // axios
-    //   .patch(`/db.json?users/${1}`, {
-    //     win: e.target.checked,
-    //   })
-    //   .then(response => {
-    //     console.log(response);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
   };
 
   return (
