@@ -11,11 +11,14 @@ function ApplicantConainer() {
 
   React.useEffect(() => {
     async function getUserData() {
-      const userData = await axios.get('/db.json');
-      setUserList(userData.data.users);
-
-      const keyData = Object.keys(userData.data.users[0]);
-      setKeyList(keyData);
+      try {
+        const userData = await axios.get(`/db.json`);
+        setUserList(userData.data.users);
+        const keyData = Object.keys(userData.data.users[0]);
+        setKeyList(keyData);
+      } catch (error) {
+        console.log(error);
+      }
     }
     getUserData();
   }, []);
@@ -34,7 +37,7 @@ function ApplicantConainer() {
 
 const ApplicantWrapper = styled.div`
   width: 100%;
-  height: 1115px;
+  height: 70vh;
   background: #f3f3f3;
   border: 1px solid red;
 `;

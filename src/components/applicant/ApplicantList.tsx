@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { IUser } from '@type/models/user';
+import ApplicantTableRow from '@src/components/applicant/ApplicantTableRow';
 
 interface IApplicantList {
   userList: IUser[];
@@ -35,28 +36,9 @@ function ApplicantList({ userList, keyList }: IApplicantList) {
           ))}
         </ListTableHeadTR>
       </ListTableHead>
-      <ListTableBody>
-        {userList.map((user: IUserObject, index: number) => (
-          <ListTableBodyTR key={index}>
-            {keyList.length > 0 &&
-              keyList.map((item: string, index: number) => {
-                const value = user[item];
-                if (item === 'win') {
-                  return (
-                    <ListTableTD key={index}>
-                      {user[item] ? (
-                        <input type="checkbox" defaultChecked />
-                      ) : (
-                        <input type="checkbox" />
-                      )}
-                    </ListTableTD>
-                  );
-                }
-                return <ListTableTD key={index}>{value}</ListTableTD>;
-              })}
-          </ListTableBodyTR>
-        ))}
-      </ListTableBody>
+      {userList.map((user: IUserObject, index: number) => (
+        <ApplicantTableRow key={index} user={user} />
+      ))}
     </ListTable>
   );
 }
@@ -91,14 +73,6 @@ const ListTableTH = styled.th`
     width: 1%;
     white-space: nowrap;
   }
-`;
-
-const ListTableBody = styled.tbody``;
-
-const ListTableBodyTR = styled.tr``;
-
-const ListTableTD = styled.td`
-  padding: 2px;
 `;
 
 export default ApplicantList;
