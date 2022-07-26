@@ -46,7 +46,6 @@ export default function TermsDetail({
 
 const TermsDetailContainer = styled.div`
   width: 100%;
-  height: 100vh;
   background: white;
   position: absolute;
   z-index: 999;
