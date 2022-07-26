@@ -7,7 +7,7 @@ import Select from '@components/admin/search/Select';
 import TransportationInput from '@components/admin/search/TransportationInput';
 import changeDateDBFormat from '@utils/changeDateDBFormat';
 import validateDate from '@utils/validateDate';
-import { IFilter } from '@pages/Admin';
+import { IFilter } from '@type/models/filter';
 
 const transportaions = [
   '버스',
@@ -106,8 +106,11 @@ export default function Search({ handleFilter }: ISearchProps) {
   };
   const handleReset = () => {
     if (inputRef.current) inputRef.current.value = '';
+    handleFilter({
+      type: 'select',
+      condition: '',
+    });
   };
-
   const placeholder: { [key: string]: string } = {
     select: '카테고리를 선택해주세요',
     date: 'YYYY.MM.DD 또는 YYYY.MM.DD ~ YYYY.MM.DD',
