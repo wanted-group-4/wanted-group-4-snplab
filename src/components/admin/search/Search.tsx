@@ -7,7 +7,7 @@ import Select from '@components/admin/search/Select';
 import TransportationInput from '@components/admin/search/TransportationInput';
 import changeDateDBFormat from '@utils/changeDateDBFormat';
 import validateDate from '@utils/validateDate';
-import { IFilter } from '@pages/Admin';
+import { IFilter } from '@type/models/filter';
 
 const transportaions = [
   '버스',
