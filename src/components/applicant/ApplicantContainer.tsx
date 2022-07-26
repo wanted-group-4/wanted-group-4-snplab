@@ -3,10 +3,13 @@ import styled from 'styled-components';
 
 import ApplicantList from '@components/applicant/ApplicantList';
 
-function ApplicantConainer() {
+interface IApplicantProps {
+  userList: object[];
+  setRound: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function ApplicantConainer({ userList, setRound }: IApplicantProps) {
   const [roundIsActive, setRoundIsActive] = React.useState<number>(0);
-  const [keyList, setKeyList] = React.useState<Array<string>>([]);
-  const [filterUserList, setFilterUserList] = React.useState([]);
 
   const handleRoundClick = (index: number) => {
     setRoundIsActive(index);
@@ -14,15 +17,15 @@ function ApplicantConainer() {
 
   const userListFilter = (index: number) => {
     handleRoundClick(index);
-    return;
+    setRound(index + 1);
   };
 
-  const roundList: number[] = [1, 2];
+  const roundList: number[] = [1, 2, 3];
 
   return (
     <ApplicantWrapper>
       <RoundWrapper>
-        {roundList.map((item, index) => (
+        {roundList.map((_, index) => (
           <ApplicantOrder
             style={{
               backgroundColor: roundIsActive === index ? '#f3f3f3' : 'white',
@@ -32,7 +35,7 @@ function ApplicantConainer() {
           >{`${index + 1}차 모집`}</ApplicantOrder>
         ))}
       </RoundWrapper>
-      <ApplicantList userList={filterUserList} keyList={keyList} />
+      <ApplicantList userList={userList} />
     </ApplicantWrapper>
   );
 }
