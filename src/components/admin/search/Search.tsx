@@ -106,8 +106,11 @@ export default function Search({ handleFilter }: ISearchProps) {
   };
   const handleReset = () => {
     if (inputRef.current) inputRef.current.value = '';
+    handleFilter({
+      type: 'select',
+      condition: '',
+    });
   };
-
   const placeholder: { [key: string]: string } = {
     select: '카테고리를 선택해주세요',
     date: 'YYYY.MM.DD 또는 YYYY.MM.DD ~ YYYY.MM.DD',
