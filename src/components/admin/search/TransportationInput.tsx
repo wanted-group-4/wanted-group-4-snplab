@@ -1,6 +1,7 @@
-import { transportaions } from '@src/constants/transportation';
 import React, { ChangeEvent, KeyboardEvent, RefObject, useState } from 'react';
 import styled from 'styled-components';
+
+import { transportations } from '@constants/transportation';
 
 interface ITransportationInputProps {
   placeholder: string;
@@ -13,7 +14,7 @@ export default function TransportationInput({
   inputRef,
   handelKeypress,
 }: ITransportationInputProps) {
-  const [options, setOptions] = useState(transportaions);
+  const [options, setOptions] = useState(transportations);
 
   const changeOptionList = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -22,10 +23,10 @@ export default function TransportationInput({
     const data = value.replace(blankRegex, '').split(',');
 
     if (value.match(lastCommaRegex)) {
-      if (!transportaions.includes(data[data.length - 2]))
+      if (!transportations.includes(data[data.length - 2]))
         return alert('리스트에 없는 이용수단입니다');
 
-      const list = transportaions
+      const list = transportations
         .filter(transportaion => !data.includes(transportaion))
         .map(item => `${value}${item}`);
 

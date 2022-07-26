@@ -6,37 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import TermsDetail from '@components/terms/TermsDetail';
 import Modal from '@components/common/Modal';
 import { IField } from '@type/models/form';
-import { IUser, transport } from '@type/models/user';
+import { transport } from '@type/models/user';
 import { checkValid } from '@utils/checkValid';
-import setDateFormat from '@utils/setDateFormat';
 import { userInfoMutation } from '@api/userApi';
+import { transportations } from '@constants/transportation';
+import { requiredFields, defaultState, defaultInfo } from '@constants/user';
 
 const TERMS1 = 'terms1';
 const TERMS2 = 'terms2';
-
-const transportList: transport[] = [
-  '버스',
-  '지하철',
-  '택시',
-  'KTX/기차',
-  '도보',
-  '자전거',
-  '전동킥보드',
-  '자가용',
-];
-
-const requiredFields = [
-  'name',
-  'gender',
-  'birth',
-  'region',
-  'phone',
-  'email',
-  'transportation',
-];
-
-const transportObj = {};
-transportList.forEach(item => (transportObj[item] = false));
 
 export default function User() {
   const navigate = useNavigate();
@@ -50,15 +27,7 @@ export default function User() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [open, setOpen] = useState({ visible: false, message: '' });
-  const [userInfo, setUserInfo] = useState({
-    name: { message: '', isDone: 0, value: '' },
-    gender: { message: '', isDone: 0, value: '' },
-    birth: { message: '', isDone: 0, value: '' },
-    region: { message: '', isDone: 0, value: '' },
-    phone: { message: '', isDone: 0, value: '' },
-    email: { message: '', isDone: 0, value: '' },
-    transportation: { message: '', isDone: 0, value: transportObj },
-  });
+  const [userInfo, setUserInfo] = useState(defaultState);
 
   useEffect(() => {
     const result = requiredFields.every(fieldName => {
@@ -70,6 +39,7 @@ export default function User() {
   const handleBlur = event => {
     const field = event.target as IField;
     if (field.nodeName !== 'INPUT') return;
+
     try {
       const fieldResult = checkValid(field);
       setUserInfo(prev => ({
@@ -102,6 +72,7 @@ export default function User() {
     const target = event.target as HTMLButtonElement;
     target.classList.toggle('selected');
     const selected = Array.from(target.classList).includes('selected');
+
     setUserInfo(prev => ({
       ...prev,
       transportation: {
@@ -117,12 +88,14 @@ export default function User() {
   const handleTerms = (event: React.MouseEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
     const isChecked = target.checked;
+
     switch (target.name) {
       case 'terms':
         if (term1Ref.current) term1Ref.current.checked = isChecked;
         if (term2Ref.current) term2Ref.current.checked = isChecked;
         setIsAgreed(() => isChecked);
         break;
+
       default:
         if (!(term1Ref.current && term2Ref.current && termsRef.current)) return;
         if (term1Ref.current.checked && term2Ref.current.checked) {
@@ -158,18 +131,7 @@ export default function User() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!isCompleted || !isAgreed) return;
-    const newInfo: IUser = {
-      round: 1,
-      win: false,
-      date: setDateFormat(new Date()),
-      name: '',
-      gender: 'female',
-      birth: '',
-      region: '',
-      phone: '',
-      email: '',
-      transportation: [],
-    };
+    const newInfo = defaultInfo;
     requiredFields.forEach(field => {
       const currentVal = userInfo[field].value;
       if (field === 'phone') {
@@ -179,16 +141,19 @@ export default function User() {
         );
         return;
       }
+
       if (field !== 'transportation') {
         newInfo[field] = currentVal;
         return;
       }
+
       Object.values(currentVal).forEach((isSelected, index) => {
         if (!isSelected) return;
-        const selectedItem = transportList[index] as transport;
+        const selectedItem = transportations[index] as transport;
         newInfo[field].push(selectedItem);
       });
     });
+
     mutate(newInfo);
     setOpen(prev => ({
       ...prev,
@@ -287,7 +252,7 @@ export default function User() {
               <SubTitle>주로 이용하는 교통수단을 모두 선택해 주세요.</SubTitle>
             </TitleWrap>
             <ButtonWrap>
-              {transportList.map((transport, index) => (
+              {transportations.map((transport, index) => (
                 <button
                   type="button"
                   key={index}
@@ -459,6 +424,7 @@ const TitleWrap = styled.div`
   width: 100%;
   margin-bottom: 15px;
 `;
+
 const Title = styled.div`
   font-size: 16px;
   line-height: 23px;
