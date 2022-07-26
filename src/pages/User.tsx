@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 import TermsDetail from '@components/terms/TermsDetail';
+import Modal from '@components/common/Modal';
 import { IField } from '@type/models/form';
 import { IUser, transport } from '@type/models/user';
 import { checkValid } from '@utils/checkValid';
@@ -37,6 +39,7 @@ const transportObj = {};
 transportList.forEach(item => (transportObj[item] = false));
 
 export default function User() {
+  const navigate = useNavigate();
   const { mutate } = userInfoMutation();
   const termsRef = useRef<HTMLInputElement>(null);
   const term1Ref = useRef<HTMLInputElement>(null);
@@ -46,6 +49,7 @@ export default function User() {
   const [isClickTerms2, setIsClickTerms2] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
+  const [open, setOpen] = useState({ visible: false, message: '' });
   const [userInfo, setUserInfo] = useState({
     name: { message: '', isDone: 0, value: '' },
     gender: { message: '', isDone: 0, value: '' },
@@ -151,7 +155,7 @@ export default function User() {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!isCompleted || !isAgreed) return;
     const newInfo: IUser = {
@@ -179,10 +183,25 @@ export default function User() {
       });
     });
     mutate(newInfo);
+    setOpen(prev => ({
+      ...prev,
+      visible: true,
+      message: '지원이 완료되었습니다.',
+    }));
+  };
+
+  const handleModal = () => {
+    setOpen(prev => ({ ...prev, visible: false }));
+    navigate('/admin');
   };
 
   return (
     <UserContainer>
+      <Modal
+        visible={open.visible}
+        handleClick={handleModal}
+        msg={open.message}
+      />
       <UserWrap>
         <Header>
           <h2>
@@ -487,6 +506,7 @@ const SubmitWrap = styled.div`
     font-weight: bold;
     color: #fff;
     background-color: #4e4e4e;
+    border-radius: 8px;
     &:disabled {
       cursor: not-allowed;
       color: #7b7b7b;
