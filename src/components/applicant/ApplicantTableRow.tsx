@@ -41,7 +41,9 @@ function ApplicantTableRow({ user, num }: ApplicationTableRowProps) {
   );
 }
 
-const ListTableBody = styled.tbody``;
+const ListTableBody = styled.tbody`
+  height: 25px;
+`;
 const ListTableTR = styled.tr``;
 const ListTableTD = styled.td`
   vertical-align: middle;

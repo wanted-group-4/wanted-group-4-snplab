@@ -3,25 +3,13 @@ import styled from 'styled-components';
 
 import { IAdmin } from '@type/models/user';
 import ApplicantTableRow from '@src/components/applicant/ApplicantTableRow';
+import { titleList } from '@src/constants/admin';
 
 interface IApplicantList {
   userList: IAdmin[];
 }
 
 function ApplicantList({ userList }: IApplicantList) {
-  const titleList: string[] = [
-    'Num.',
-    '지원날짜',
-    '지원자명',
-    '성별',
-    '생년월일',
-    '연락처',
-    '이메일',
-    '이용수단',
-    '거주지',
-    '당첨여부',
-  ];
-
   return (
     <ListTable>
       <ListTableHead>

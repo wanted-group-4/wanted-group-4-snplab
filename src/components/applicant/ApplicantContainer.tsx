@@ -37,10 +37,9 @@ function ApplicantConainer({ userList, setRound, curRound }: IApplicantProps) {
 }
 
 const ApplicantWrapper = styled.div`
-  width: 80vw;
-  height: 60vh;
+  width: 100%;
+  height: 81%;
   background: ${({ theme }) => theme.color.grey_03};
-  overflow-x: auto;
 `;
 
 const RoundWrapper = styled.div`
