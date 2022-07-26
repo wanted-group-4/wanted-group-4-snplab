@@ -1,15 +1,6 @@
+import { transportaions } from '@src/constants/transportation';
 import React, { ChangeEvent, KeyboardEvent, RefObject, useState } from 'react';
 import styled from 'styled-components';
-
-const transportaions = [
-  '버스',
-  '지하철',
-  '택시',
-  'KTX/기차',
-  '도보',
-  '전동킥보드',
-  '자가용',
-];
 
 interface ITransportationInputProps {
   placeholder: string;

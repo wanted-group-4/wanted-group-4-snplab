@@ -5,11 +5,7 @@ import {
   fetchUserBySimilarlity,
   fetchUserByPeriod,
 } from '@api/adminApi';
-
-export interface IFilter {
-  type: string;
-  condition: string | string[];
-}
+import { IFilter } from '@type/models/filter';
 
 //유즈쿼리 만들기
 function useAdminQueries(filter: IFilter, round: number) {

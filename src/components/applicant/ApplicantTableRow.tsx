@@ -2,45 +2,39 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { patchUserWin } from '@api/adminApi';
+import { IAdmin } from '@type/models/user';
 
-function ApplicantTableRow({ user }: any) {
-  const tableRowRef = React.useRef<HTMLTableSectionElement>(null);
+interface ApplicationTableRowProps {
+  user: IAdmin;
+  num: number;
+}
+
+function ApplicantTableRow({ user, num }: ApplicationTableRowProps) {
   const updateWin = patchUserWin();
-
   const handleWinStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (tableRowRef.current) {
-      const id = parseInt(tableRowRef.current.innerText.slice(0, 1));
-      const win = e.target.checked;
-      updateWin.mutate({ id, win });
-    }
-    return;
+    const id = user.id;
+    const win = e.target.checked;
+    updateWin.mutate({ id, win });
   };
 
   return (
-    <ListTableBody ref={tableRowRef}>
+    <ListTableBody>
       <ListTableTR>
-        <ListTableTD>{user.id}</ListTableTD>
+        <ListTableTD>{num + 1}</ListTableTD>
         <ListTableTD>{user.date}</ListTableTD>
         <ListTableTD>{user.name}</ListTableTD>
         <ListTableTD>{user.gender}</ListTableTD>
         <ListTableTD>{user.birth}</ListTableTD>
         <ListTableTD>{user.phone}</ListTableTD>
         <ListTableTD>{user.email}</ListTableTD>
-        <ListTableTD
-          style={{
-            overflowX: 'auto',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {user.transportation.join(', ')}
-        </ListTableTD>
+        <ListTableTD>{user.transportation.join(', ')}</ListTableTD>
         <ListTableTD>{user.region}</ListTableTD>
         <ListTableTD>
-          {user.win ? (
-            <input type="checkbox" defaultChecked onChange={handleWinStatus} />
-          ) : (
-            <input type="checkbox" onChange={handleWinStatus} />
-          )}
+          <WinCheckbox
+            type="checkbox"
+            defaultChecked={user.win}
+            onChange={handleWinStatus}
+          />
         </ListTableTD>
       </ListTableTR>
     </ListTableBody>
@@ -50,6 +44,10 @@ function ApplicantTableRow({ user }: any) {
 const ListTableBody = styled.tbody``;
 const ListTableTR = styled.tr``;
 const ListTableTD = styled.td`
+  vertical-align: middle;
   padding: 2px;
+  white-space: nowrap;
 `;
+const WinCheckbox = styled.input``;
+
 export default ApplicantTableRow;

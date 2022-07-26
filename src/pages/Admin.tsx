@@ -5,11 +5,7 @@ import Search from '@components/admin/search/Search';
 import Download from '@components/admin/Download';
 import ApplicantContainer from '@components/applicant/ApplicantContainer';
 import useAdminQueries from '@src/hooks/useAdminQueries';
-
-export interface IFilter {
-  type: string;
-  condition: string | string[];
-}
+import { IFilter } from '@type/models/filter';
 
 export default function Admin() {
   const [filter, setFilter] = useState<IFilter>({
@@ -33,7 +29,11 @@ export default function Admin() {
           <Download data={data} />
         </SearchContainer>
       </AdminContainer>
-      <ApplicantContainer userList={data} setRound={setRound} />
+      <ApplicantContainer
+        userList={data}
+        setRound={setRound}
+        curRound={round}
+      />
     </>
   );
 }
