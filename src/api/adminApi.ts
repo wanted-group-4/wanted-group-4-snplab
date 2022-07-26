@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { BASE_URL } from '@api/index';
 // 탭별 모든 유저 정보 가져오기(페이지네이션)
 export const fetchUsers = async ({ queryKey }) => {
@@ -36,6 +36,17 @@ export const fetchUserByPeriod = async ({ queryKey }) => {
     `${BASE_URL}/users?${type}_gte=${condition[0]}&date_lte=${condition[1]}&round=${round}&_sort=name`,
   );
   return response.data;
+};
+
+const fetchLastRound = async () => {
+  const response = await axios.get(`${BASE_URL}/users?_sort=round&_order=desc`);
+  const lastRound = await response.data[0].round;
+  const roundList = Array.from(Array(lastRound), (_, idex) => idex + 1);
+  return roundList;
+};
+
+export const getRoundList = () => {
+  return useQuery(['user', 'round'], fetchLastRound);
 };
 
 // update ----------------------------------
