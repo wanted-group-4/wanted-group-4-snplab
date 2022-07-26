@@ -1,15 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { IUser } from '@type/models/user';
+import { IAdmin } from '@type/models/user';
 import ApplicantTableRow from '@src/components/applicant/ApplicantTableRow';
 
 interface IApplicantList {
-  userList: any;
-}
-
-interface IUserObject {
-  [key: string]: any;
+  userList: IAdmin[];
 }
 
 function ApplicantList({ userList }: IApplicantList) {
@@ -30,14 +26,14 @@ function ApplicantList({ userList }: IApplicantList) {
     <ListTable>
       <ListTableHead>
         <ListTableHeadTR>
-          {titleList.map((item, index) => (
+          {titleList.map((item: string, index: number) => (
             <ListTableTH key={index}>{item}</ListTableTH>
           ))}
         </ListTableHeadTR>
       </ListTableHead>
       {userList &&
-        userList.map((user: IUserObject, index: number) => (
-          <ApplicantTableRow key={index} user={user} />
+        userList.map((user: IAdmin, index: number) => (
+          <ApplicantTableRow key={index} user={user} num={index} />
         ))}
     </ListTable>
   );

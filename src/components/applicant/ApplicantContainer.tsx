@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 import ApplicantList from '@components/applicant/ApplicantList';
 import { getRoundList } from '@api/adminApi';
+import { IAdmin } from '@type/models/user';
 
 interface IApplicantProps {
-  userList: object[];
+  userList: IAdmin[];
   setRound: React.Dispatch<React.SetStateAction<number>>;
   curRound: number;
 }
@@ -20,7 +21,7 @@ function ApplicantConainer({ userList, setRound, curRound }: IApplicantProps) {
     <ApplicantWrapper>
       <RoundWrapper>
         {round &&
-          round.map((_, index) => (
+          round.map((_, index: number) => (
             <ApplicantOrder
               style={{
                 backgroundColor: curRound - 1 === index ? '#f3f3f3' : 'white',

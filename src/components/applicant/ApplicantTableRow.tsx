@@ -2,10 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { patchUserWin } from '@api/adminApi';
+import { IAdmin } from '@type/models/user';
 
-function ApplicantTableRow({ user }: any) {
+interface ApplicationTableRowProps {
+  user: IAdmin;
+  num: number;
+}
+
+function ApplicantTableRow({ user, num }: ApplicationTableRowProps) {
   const updateWin = patchUserWin();
-
   const handleWinStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = user.id;
     const win = e.target.checked;
@@ -15,7 +20,7 @@ function ApplicantTableRow({ user }: any) {
   return (
     <ListTableBody>
       <ListTableTR>
-        <ListTableTD>{user.id}</ListTableTD>
+        <ListTableTD>{num + 1}</ListTableTD>
         <ListTableTD>{user.date}</ListTableTD>
         <ListTableTD>{user.name}</ListTableTD>
         <ListTableTD>{user.gender}</ListTableTD>
