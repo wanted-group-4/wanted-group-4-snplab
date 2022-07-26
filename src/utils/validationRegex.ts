@@ -60,8 +60,8 @@ class ValidationRegex {
 
   isPhone(field: IField, msg = '') {
     const content = field.value.trim();
-    const regex1 = /^01(?:0[1][6-9])(?:\d{3}|\d{4})\d{4}$/;
-    const regex2 = /^\d{2,3}-\d{3,4}-\d{4}$/;
+    const regex1 = /^01(?:0[1][6-9])(?:\d{4})\d{4}$/;
+    const regex2 = /^\d{3}\d{4}\d{4}$/;
     if (!regex1.test(content) && !regex2.test(content)) {
       throw new RegexException(msg, field);
     }
