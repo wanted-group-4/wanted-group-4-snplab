@@ -41,7 +41,7 @@ export const fetchUserByPeriod = async ({ queryKey }) => {
 const fetchLastRound = async () => {
   const response = await axios.get(`${BASE_URL}/users?_sort=round&_order=desc`);
   const lastRound = await response.data[0].round;
-  const roundList = Array.from(Array(lastRound), (_, idex) => idex + 1);
+  const roundList = Array.from(Array(lastRound), (_, index) => index + 1);
   return roundList;
 };
 
