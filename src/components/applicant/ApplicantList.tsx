@@ -5,15 +5,14 @@ import { IUser } from '@type/models/user';
 import ApplicantTableRow from '@src/components/applicant/ApplicantTableRow';
 
 interface IApplicantList {
-  userList: IUser[];
-  keyList: string[];
+  userList: any;
 }
 
 interface IUserObject {
   [key: string]: any;
 }
 
-function ApplicantList({ userList, keyList }: IApplicantList) {
+function ApplicantList({ userList }: IApplicantList) {
   const titleList: string[] = [
     'Num.',
     '지원날짜',
@@ -36,9 +35,10 @@ function ApplicantList({ userList, keyList }: IApplicantList) {
           ))}
         </ListTableHeadTR>
       </ListTableHead>
-      {userList.map((user: IUserObject, index: number) => (
-        <ApplicantTableRow key={index} user={user} />
-      ))}
+      {userList &&
+        userList.map((user: IUserObject, index: number) => (
+          <ApplicantTableRow key={index} user={user} />
+        ))}
     </ListTable>
   );
 }
