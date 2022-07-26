@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import ApplicantList from '@components/applicant/ApplicantList';
+import { getRoundList } from '@api/adminApi';
 
 interface IApplicantProps {
   userList: object[];
@@ -10,6 +11,7 @@ interface IApplicantProps {
 
 function ApplicantConainer({ userList, setRound }: IApplicantProps) {
   const [roundIsActive, setRoundIsActive] = React.useState<number>(0);
+  const round = getRoundList().data;
 
   const handleRoundClick = (index: number) => {
     setRoundIsActive(index);
@@ -20,20 +22,19 @@ function ApplicantConainer({ userList, setRound }: IApplicantProps) {
     setRound(index + 1);
   };
 
-  const roundList: number[] = [1, 2, 3];
-
   return (
     <ApplicantWrapper>
       <RoundWrapper>
-        {roundList.map((_, index) => (
-          <ApplicantOrder
-            style={{
-              backgroundColor: roundIsActive === index ? '#f3f3f3' : 'white',
-            }}
-            onClick={() => userListFilter(index)}
-            key={index}
-          >{`${index + 1}차 모집`}</ApplicantOrder>
-        ))}
+        {round &&
+          round.map((_, index) => (
+            <ApplicantOrder
+              style={{
+                backgroundColor: roundIsActive === index ? '#f3f3f3' : 'white',
+              }}
+              onClick={() => userListFilter(index)}
+              key={index}
+            >{`${index + 1}차 모집`}</ApplicantOrder>
+          ))}
       </RoundWrapper>
       <ApplicantList userList={userList} />
     </ApplicantWrapper>
