@@ -33,7 +33,7 @@ export const fetchUserByPeriod = async ({ queryKey }) => {
   const condition = queryKey[2];
   const round = queryKey[3];
   const response = await axios.get(
-    `${BASE_URL}/users?${type}_gte=${condition[0]}&date_lte=${condition[1]}&round=${round}&_sort=name`,
+    `${BASE_URL}/users?${type}_gte=${condition[0]}&date_lte=${condition[1]}&round=${round}`,
   );
   return response.data;
 };
