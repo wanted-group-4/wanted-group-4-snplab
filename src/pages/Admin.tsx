@@ -29,7 +29,11 @@ export default function Admin() {
           <Download data={data} />
         </SearchContainer>
       </AdminContainer>
-      <ApplicantContainer userList={data} setRound={setRound} />
+      <ApplicantContainer
+        userList={data}
+        setRound={setRound}
+        curRound={round}
+      />
     </>
   );
 }

@@ -3,22 +3,17 @@ import styled from 'styled-components';
 
 import ApplicantList from '@components/applicant/ApplicantList';
 import { getRoundList } from '@api/adminApi';
+import { IAdmin } from '@type/models/user';
 
 interface IApplicantProps {
-  userList: object[];
+  userList: IAdmin[];
   setRound: React.Dispatch<React.SetStateAction<number>>;
+  curRound: number;
 }
 
-function ApplicantConainer({ userList, setRound }: IApplicantProps) {
-  const [roundIsActive, setRoundIsActive] = React.useState<number>(0);
+function ApplicantConainer({ userList, setRound, curRound }: IApplicantProps) {
   const round = getRoundList().data;
-
-  const handleRoundClick = (index: number) => {
-    setRoundIsActive(index);
-  };
-
   const userListFilter = (index: number) => {
-    handleRoundClick(index);
     setRound(index + 1);
   };
 
@@ -26,10 +21,10 @@ function ApplicantConainer({ userList, setRound }: IApplicantProps) {
     <ApplicantWrapper>
       <RoundWrapper>
         {round &&
-          round.map((_, index) => (
+          round.map((_, index: number) => (
             <ApplicantOrder
               style={{
-                backgroundColor: roundIsActive === index ? '#f3f3f3' : 'white',
+                backgroundColor: curRound - 1 === index ? '#f3f3f3' : 'white',
               }}
               onClick={() => userListFilter(index)}
               key={index}
@@ -42,9 +37,10 @@ function ApplicantConainer({ userList, setRound }: IApplicantProps) {
 }
 
 const ApplicantWrapper = styled.div`
-  width: 100%;
-  height: 70vh;
-  background: #f3f3f3;
+  width: 80vw;
+  height: 60vh;
+  background: ${({ theme }) => theme.color.grey_03};
+  overflow-x: auto;
 `;
 
 const RoundWrapper = styled.div`
