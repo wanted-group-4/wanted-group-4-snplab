@@ -2,6 +2,8 @@ import React from 'react';
 import { Outlet } from 'react-router';
 import styled from 'styled-components';
 
+import Header from '@components/layout/Header';
+
 export default function WebLayout() {
   return (
     <WebLayoutContainer>
@@ -29,10 +31,10 @@ const WebLayoutContainer = styled.div`
   }
 `;
 
-const Header = styled.div`
-  grid-area: header;
-  background: ${({ theme }) => theme.color.black};
-`;
+// const Header = styled.div`
+//   grid-area: header;
+//   background: ${({ theme }) => theme.color.black};
+// `;
 const SideBar = styled.div`
   grid-area: sidebar;
   background: ${({ theme }) => theme.color.grey_04};
