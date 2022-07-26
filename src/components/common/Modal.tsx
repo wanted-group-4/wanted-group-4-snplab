@@ -1,8 +1,6 @@
 import React, { memo } from 'react';
 import styled from 'styled-components';
 
-import ButtonWrapper from './ButtonWrapper';
-
 interface IModalProps {
   visible: boolean;
   msg?: string;
@@ -17,9 +15,7 @@ export default function Modal(props: IModalProps) {
     <TransLayer style={{ display: visible ? 'block' : 'none' }}>
       <div className="box">
         <div className="msg">{msg}</div>
-        <ButtonWrapper width="80px" color="#ff4b4b" onClick={handleClick}>
-          {btn}
-        </ButtonWrapper>
+        <button onClick={handleClick}>{btn}</button>
       </div>
     </TransLayer>
   );
@@ -60,9 +56,9 @@ const TransLayer = memo(styled.div`
     }
 
     button {
-      margin-top: 12px;
-      padding: 8px;
-      border-radius: 4px;
+      padding: 12px;
+      color: rgb(213, 44, 89);
+      background-color: #fff;
     }
   }
 `);

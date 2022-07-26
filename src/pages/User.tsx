@@ -171,12 +171,19 @@ export default function User() {
       transportation: [],
     };
     requiredFields.forEach(field => {
-      if (field !== 'transportation') {
-        newInfo[field] = userInfo[field].value;
+      const currentVal = userInfo[field].value;
+      if (field === 'phone') {
+        newInfo[field] = currentVal.replace(
+          /(\d{3})(\d{4})(\d{4})/g,
+          '$1-$2-$3',
+        );
         return;
       }
-      newInfo[field] = [];
-      Object.values(userInfo[field].value).forEach((isSelected, index) => {
+      if (field !== 'transportation') {
+        newInfo[field] = currentVal;
+        return;
+      }
+      Object.values(currentVal).forEach((isSelected, index) => {
         if (!isSelected) return;
         const selectedItem = transportList[index] as transport;
         newInfo[field].push(selectedItem);
