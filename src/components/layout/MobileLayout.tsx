@@ -12,7 +12,6 @@ export default function MobileLayout() {
 
 const Layout = styled.div`
   width: 375px;
-  height: 100vh;
   border: 1px solid #ccc;
   margin: 0 auto;
   overflow-y: scroll;
