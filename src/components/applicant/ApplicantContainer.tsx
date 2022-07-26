@@ -7,18 +7,12 @@ import { getRoundList } from '@api/adminApi';
 interface IApplicantProps {
   userList: object[];
   setRound: React.Dispatch<React.SetStateAction<number>>;
+  curRound: number;
 }
 
-function ApplicantConainer({ userList, setRound }: IApplicantProps) {
-  const [roundIsActive, setRoundIsActive] = React.useState<number>(0);
+function ApplicantConainer({ userList, setRound, curRound }: IApplicantProps) {
   const round = getRoundList().data;
-
-  const handleRoundClick = (index: number) => {
-    setRoundIsActive(index);
-  };
-
   const userListFilter = (index: number) => {
-    handleRoundClick(index);
     setRound(index + 1);
   };
 
@@ -29,7 +23,7 @@ function ApplicantConainer({ userList, setRound }: IApplicantProps) {
           round.map((_, index) => (
             <ApplicantOrder
               style={{
-                backgroundColor: roundIsActive === index ? '#f3f3f3' : 'white',
+                backgroundColor: curRound - 1 === index ? '#f3f3f3' : 'white',
               }}
               onClick={() => userListFilter(index)}
               key={index}
