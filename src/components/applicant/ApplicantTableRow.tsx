@@ -39,7 +39,10 @@ function ApplicantTableRow({ user }: any) {
 const ListTableBody = styled.tbody``;
 const ListTableTR = styled.tr``;
 const ListTableTD = styled.td`
+  vertical-align: middle;
   padding: 2px;
+  white-space: nowrap;
 `;
 const WinCheckbox = styled.input``;
+
 export default ApplicantTableRow;

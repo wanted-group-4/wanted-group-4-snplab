@@ -47,8 +47,6 @@ const ListTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   text-align: center;
-  border-radius: 5px;
-  overflow: hidden;
 `;
 
 const ListTableHead = styled.thead`
@@ -64,6 +62,7 @@ const ListTableHeadTR = styled.tr`
 const ListTableTH = styled.th`
   padding: 5px;
   text-transform: capitalize;
+  white-space: nowrap;
 
   :not(:last-of-type) {
     border-right: 1px solid ${({ theme }) => theme.color.grey_01};
