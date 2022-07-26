@@ -1,25 +1,112 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import TermsDetail from '@components/terms/TermsDetail';
+import { useNavigate } from 'react-router-dom';
 
-const transportList = [
-  '버스',
-  '지하철',
-  '택시',
-  'KTX/기차',
-  '도보',
-  '자전거',
-  '전동킥보드',
-  '자가용',
-];
+import TermsDetail from '@components/terms/TermsDetail';
+import Modal from '@components/common/Modal';
+import { IField } from '@type/models/form';
+import { transport } from '@type/models/user';
+import { checkValid } from '@utils/checkValid';
+import { userInfoMutation } from '@api/userApi';
+import { transportations } from '@constants/transportation';
+import { requiredFields, defaultState, defaultInfo } from '@constants/user';
 
 const TERMS1 = 'terms1';
 const TERMS2 = 'terms2';
 
 export default function User() {
+  const navigate = useNavigate();
+  const { mutate } = userInfoMutation();
+  const termsRef = useRef<HTMLInputElement>(null);
+  const term1Ref = useRef<HTMLInputElement>(null);
+  const term2Ref = useRef<HTMLInputElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
   const [isClickTerms1, setIsClickTerms1] = useState(false);
   const [isClickTerms2, setIsClickTerms2] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false);
+  const [open, setOpen] = useState({ visible: false, message: '' });
+  const [userInfo, setUserInfo] = useState(defaultState);
+
+  useEffect(() => {
+    const result = requiredFields.every(fieldName => {
+      return userInfo[fieldName].isDone > 0;
+    });
+    setIsCompleted(() => result);
+  }, [requiredFields, userInfo]);
+
+  const handleBlur = event => {
+    const field = event.target as IField;
+    if (field.nodeName !== 'INPUT') return;
+
+    try {
+      const fieldResult = checkValid(field);
+      setUserInfo(prev => ({
+        ...prev,
+        [field.name]: {
+          ...[field.name],
+          message: fieldResult.message,
+          isDone: 1,
+          value: field.value,
+        },
+      }));
+    } catch (error) {
+      const fieldError = error as Error;
+      setUserInfo(prev => ({
+        ...prev,
+        [field.name]: { ...[field.name], message: fieldError.message },
+      }));
+      field.focus();
+    }
+  };
+
+  const handleBirth = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Backspace') return;
+    const len = event.target.value.length;
+    if (len !== 4 && len !== 7) return;
+    event.target.value += '.';
+  };
+
+  const handleTransportation = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const target = event.target as HTMLButtonElement;
+    target.classList.toggle('selected');
+    const selected = Array.from(target.classList).includes('selected');
+
+    setUserInfo(prev => ({
+      ...prev,
+      transportation: {
+        ...prev.transportation,
+        value: { ...prev.transportation.value, [target.name]: selected },
+        isDone: selected
+          ? prev.transportation.isDone + 1
+          : prev.transportation.isDone - 1,
+      },
+    }));
+  };
+
+  const handleTerms = (event: React.MouseEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement;
+    const isChecked = target.checked;
+
+    switch (target.name) {
+      case 'terms':
+        if (term1Ref.current) term1Ref.current.checked = isChecked;
+        if (term2Ref.current) term2Ref.current.checked = isChecked;
+        setIsAgreed(() => isChecked);
+        break;
+
+      default:
+        if (!(term1Ref.current && term2Ref.current && termsRef.current)) return;
+        if (term1Ref.current.checked && term2Ref.current.checked) {
+          termsRef.current.checked = true;
+          setIsAgreed(() => true);
+        } else {
+          termsRef.current.checked = false;
+          setIsAgreed(() => false);
+        }
+    }
+  };
 
   const handleBackButtonClick = (value: string) => {
     if (value === TERMS1) {
@@ -41,53 +128,122 @@ export default function User() {
     }
   };
 
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!isCompleted || !isAgreed) return;
+    const newInfo = defaultInfo;
+    requiredFields.forEach(field => {
+      const currentVal = userInfo[field].value;
+      if (field === 'phone') {
+        newInfo[field] = currentVal.replace(
+          /(\d{3})(\d{4})(\d{4})/g,
+          '$1-$2-$3',
+        );
+        return;
+      }
+
+      if (field !== 'transportation') {
+        newInfo[field] = currentVal;
+        return;
+      }
+
+      Object.values(currentVal).forEach((isSelected, index) => {
+        if (!isSelected) return;
+        const selectedItem = transportations[index] as transport;
+        newInfo[field].push(selectedItem);
+      });
+    });
+
+    mutate(newInfo);
+    setOpen(prev => ({
+      ...prev,
+      visible: true,
+      message: '지원이 완료되었습니다.',
+    }));
+  };
+
+  const handleModal = () => {
+    setOpen(prev => ({ ...prev, visible: false }));
+    navigate('/admin');
+  };
+
   return (
     <UserContainer>
+      <Modal
+        visible={open.visible}
+        handleClick={handleModal}
+        msg={open.message}
+      />
       <UserWrap>
         <Header>
           <h2>
-            크라우드 워커에 지원하기위해 <br />
+            크라우드 워커에 지원하기 위해
+            <br />
             필요한 정보를 입력하세요.
           </h2>
         </Header>
-        <Form>
-          <InfoWrap>
+        <Form onSubmit={handleSubmit}>
+          <InfoWrap onBlur={handleBlur}>
             <Label>
               <span>이름</span>
-              <input type="text" required placeholder="홍길동" />
+              <input type="text" name="name" placeholder="홍길동" />
+              <Message className={userInfo?.name?.isDone ? 'isDone' : 'yet'}>
+                {userInfo?.name?.message}
+              </Message>
             </Label>
             <Label>
               <span>성별</span>
               <RadioWrap>
                 <Radio>
-                  <input type="radio" value="여자" />
+                  <input type="radio" name="gender" value="female" />
                   여자
                 </Radio>
                 <Radio>
-                  <input type="radio" value="남자" />
+                  <input type="radio" name="gender" value="male" />
                   남자
                 </Radio>
               </RadioWrap>
+              <Message className={userInfo?.gender?.isDone ? 'isDone' : 'yet'}>
+                {userInfo?.gender?.message}
+              </Message>
             </Label>
             <Label>
               <span>거주지역</span>
-              <input type="text" required placeholder="거주지역" />
+              <input type="text" name="region" placeholder="거주지역" />
             </Label>
             <Label>
               <span>연락처</span>
               <input
                 type="text"
-                required
+                name="phone"
                 placeholder="'-'없이 입력해 주세요."
               />
+              <Message className={userInfo?.phone?.isDone ? 'isDone' : 'yet'}>
+                {userInfo?.phone?.message}
+              </Message>
             </Label>
             <Label>
               <span>생년월일</span>
-              <input type="text" required placeholder="YYYY.MM.DD" />
+              <input
+                type="text"
+                name="birth"
+                placeholder="YYYY.MM.DD"
+                onKeyUp={handleBirth}
+              />
+              <Message className={userInfo?.birth?.isDone ? 'isDone' : 'yet'}>
+                {userInfo?.birth?.message}
+              </Message>
             </Label>
             <Label>
               <span>이메일</span>
-              <input type="email" required placeholder="홍길동" />
+              <input
+                type="text"
+                name="email"
+                placeholder="gildonghong@gmail.com"
+              />
+              <Message className={userInfo?.email?.isDone ? 'isDone' : 'yet'}>
+                {userInfo?.email?.message}
+              </Message>
             </Label>
           </InfoWrap>
           <TransportWrap>
@@ -96,21 +252,33 @@ export default function User() {
               <SubTitle>주로 이용하는 교통수단을 모두 선택해 주세요.</SubTitle>
             </TitleWrap>
             <ButtonWrap>
-              {transportList.map((transport, index) => (
-                <button key={index}>{transport}</button>
+              {transportations.map((transport, index) => (
+                <button
+                  type="button"
+                  key={index}
+                  name={transport}
+                  onClick={handleTransportation}
+                >
+                  {transport}
+                </button>
               ))}
             </ButtonWrap>
+            <Message
+              className={userInfo?.transportation.isDone ? 'isDone' : 'yet'}
+            >
+              {userInfo.transportation.message}
+            </Message>
           </TransportWrap>
-          <TermsWrap>
+          <TermsWrap onChange={handleTerms}>
             <AgreementAll>
               <label>
-                <input type="checkbox" required />
+                <input type="checkbox" name="terms" ref={termsRef} />
                 <span>이용약관 모두 동의</span>
               </label>
             </AgreementAll>
             <AgreementRequired>
               <label>
-                <input type="checkbox" required />
+                <input type="checkbox" name="term1" ref={term1Ref} />
                 <span>개인정보 처리방침 고지 (필수)</span>
               </label>
               <ICon onClick={() => handleTermsDetailClick(TERMS1)}>
@@ -119,7 +287,7 @@ export default function User() {
             </AgreementRequired>
             <AgreementRequired>
               <label>
-                <input type="checkbox" required />
+                <input type="checkbox" name="term2" ref={term2Ref} />
                 <span>제3자 정보제공 동의 (필수)</span>
               </label>
               <ICon onClick={() => handleTermsDetailClick(TERMS2)}>
@@ -128,7 +296,14 @@ export default function User() {
             </AgreementRequired>
           </TermsWrap>
           <SubmitWrap>
-            <button type="submit">지원하기</button>
+            <button
+              type="submit"
+              name="submit"
+              disabled={!(isCompleted && isAgreed)}
+              ref={submitRef}
+            >
+              지원하기
+            </button>
           </SubmitWrap>
         </Form>
       </UserWrap>
@@ -210,7 +385,7 @@ const Label = styled.label`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  span {
+  span:first-child {
     font-weight: 500;
     font-size: 16px;
     line-height: 23px;
@@ -232,10 +407,16 @@ const TransportWrap = styled.div`
 const ButtonWrap = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 5px 10px;
+  gap: 10px;
   margin-bottom: 35px;
   button {
     padding: 10px 12px;
+    border-radius: 8px;
+    &.selected {
+      font-weight: bold;
+      color: #fff;
+      background-color: #4e4e4e;
+    }
   }
 `;
 
@@ -243,6 +424,7 @@ const TitleWrap = styled.div`
   width: 100%;
   margin-bottom: 15px;
 `;
+
 const Title = styled.div`
   font-size: 16px;
   line-height: 23px;
@@ -294,5 +476,25 @@ const SubmitWrap = styled.div`
   button {
     width: 100%;
     height: 50px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #4e4e4e;
+    border-radius: 8px;
+    &:disabled {
+      cursor: not-allowed;
+      color: #7b7b7b;
+      background: #eee;
+    }
+  }
+`;
+
+const Message = styled.span`
+  padding-top: 12px;
+  font-size: 12px;
+  &.isDone {
+    color: green;
+  }
+  &.yet {
+    color: red;
   }
 `;

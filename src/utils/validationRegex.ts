@@ -1,5 +1,5 @@
 import { IField } from '@type/models/form';
-import RegexException from '@utils/RegexException';
+import RegexException from '@src/utils/validationException';
 
 const isEmptyString = (content: unknown) => {
   return typeof content === 'string' && content.trim().length === 0;
@@ -58,8 +58,22 @@ class ValidationRegex {
     );
   }
 
-  isContactNum(field: IField, msg = '') {
-    return this.field(field, msg, /^$\d{2,3}\d{3,4}\d{4}$/);
+  isPhone(field: IField, msg = '') {
+    const content = field.value.trim();
+    const regex1 = /^01(?:0[1][6-9])(?:\d{4})\d{4}$/;
+    const regex2 = /^\d{3}\d{4}\d{4}$/;
+    if (!regex1.test(content) && !regex2.test(content)) {
+      throw new RegexException(msg, field);
+    }
+    return true;
+  }
+
+  isDate(field: IField, msg = '') {
+    return this.field(
+      field,
+      msg,
+      /^\d{4}.(0[1-9]|1[012]).(0[1-9]|[12][0-9]|3[01])$/,
+    );
   }
 }
 

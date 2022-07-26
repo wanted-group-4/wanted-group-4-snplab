@@ -11,7 +11,7 @@ export interface IUser {
   win: boolean;
 }
 
-type transport =
+export type transport =
   | '버스'
   | '지하철'
   | '택시'
