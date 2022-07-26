@@ -2,11 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 
 import ApplicantList from '@components/applicant/ApplicantList';
+import { getRoundList } from '@api/adminApi';
 
-function ApplicantConainer() {
+interface IApplicantProps {
+  userList: object[];
+  setRound: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function ApplicantConainer({ userList, setRound }: IApplicantProps) {
   const [roundIsActive, setRoundIsActive] = React.useState<number>(0);
-  const [keyList, setKeyList] = React.useState<Array<string>>([]);
-  const [filterUserList, setFilterUserList] = React.useState([]);
+  const round = getRoundList().data;
 
   const handleRoundClick = (index: number) => {
     setRoundIsActive(index);
@@ -14,25 +19,24 @@ function ApplicantConainer() {
 
   const userListFilter = (index: number) => {
     handleRoundClick(index);
-    return;
+    setRound(index + 1);
   };
-
-  const roundList: number[] = [1, 2];
 
   return (
     <ApplicantWrapper>
       <RoundWrapper>
-        {roundList.map((item, index) => (
-          <ApplicantOrder
-            style={{
-              backgroundColor: roundIsActive === index ? '#f3f3f3' : 'white',
-            }}
-            onClick={() => userListFilter(index)}
-            key={index}
-          >{`${index + 1}차 모집`}</ApplicantOrder>
-        ))}
+        {round &&
+          round.map((_, index) => (
+            <ApplicantOrder
+              style={{
+                backgroundColor: roundIsActive === index ? '#f3f3f3' : 'white',
+              }}
+              onClick={() => userListFilter(index)}
+              key={index}
+            >{`${index + 1}차 모집`}</ApplicantOrder>
+          ))}
       </RoundWrapper>
-      <ApplicantList userList={filterUserList} keyList={keyList} />
+      <ApplicantList userList={userList} />
     </ApplicantWrapper>
   );
 }
