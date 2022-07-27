@@ -22,11 +22,16 @@ export default function User() {
   const term1Ref = useRef<HTMLInputElement>(null);
   const term2Ref = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
-  const [isClickTerms1, setIsClickTerms1] = useState<boolean>(false);
-  const [isClickTerms2, setIsClickTerms2] = useState<boolean>(false);
+  const [isClickTerms, setIsClickTerms] = useState<{
+    terms1: boolean;
+    terms2: boolean;
+  }>({
+    terms1: false,
+    terms2: false,
+  });
   const [isRegionFocus, setIsRegionFocus] = useState<boolean>(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [isAgreed, setIsAgreed] = useState(false);
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [isAgreed, setIsAgreed] = useState<boolean>(false);
   const [open, setOpen] = useState({ visible: false, message: '' });
   const [userInfo, setUserInfo] = useState(defaultState);
 
@@ -126,24 +131,11 @@ export default function User() {
     [termsRef, term1Ref, term2Ref, isAgreed],
   );
 
-  const handleBackButtonClick = (value: string) => {
-    if (value === TERMS1) {
-      setIsClickTerms1(false);
-    }
-
-    if (value === TERMS2) {
-      setIsClickTerms2(false);
-    }
-  };
-
-  const handleTermsDetailClick = (value: string) => {
-    if (value === TERMS1) {
-      setIsClickTerms1(true);
-    }
-
-    if (value === TERMS2) {
-      setIsClickTerms2(true);
-    }
+  const handleTermsModalToggle = (value: string) => {
+    setIsClickTerms({
+      ...isClickTerms,
+      [value]: !isClickTerms[value],
+    });
   };
 
   const handleSubmit = useCallback(
@@ -322,7 +314,7 @@ export default function User() {
                 <input type="checkbox" name="term1" ref={term1Ref} />
                 <span>개인정보 처리방침 고지 (필수)</span>
               </label>
-              <ICon onClick={() => handleTermsDetailClick(TERMS1)}>
+              <ICon onClick={() => handleTermsModalToggle(TERMS1)}>
                 <MdKeyboardArrowRight size={18} />
               </ICon>
             </AgreementRequired>
@@ -331,7 +323,7 @@ export default function User() {
                 <input type="checkbox" name="term2" ref={term2Ref} />
                 <span>제3자 정보제공 동의 (필수)</span>
               </label>
-              <ICon onClick={() => handleTermsDetailClick(TERMS2)}>
+              <ICon onClick={() => handleTermsModalToggle(TERMS2)}>
                 <MdKeyboardArrowRight size={18} />
               </ICon>
             </AgreementRequired>
@@ -348,15 +340,15 @@ export default function User() {
           </SubmitWrap>
         </Form>
       </UserWrap>
-      {isClickTerms1 && (
+      {isClickTerms.terms1 && (
         <TermsDetail
-          handleBackButtonClick={handleBackButtonClick}
+          handleTermsModalToggle={handleTermsModalToggle}
           title={TERMS1}
         />
       )}
-      {isClickTerms2 && (
+      {isClickTerms.terms2 && (
         <TermsDetail
-          handleBackButtonClick={handleBackButtonClick}
+          handleTermsModalToggle={handleTermsModalToggle}
           title={TERMS2}
         />
       )}
@@ -458,8 +450,10 @@ const ButtonWrap = memo(styled.div`
   gap: 10px;
   margin-bottom: 35px;
   button {
-    padding: 10px 12px;
-    border-radius: 8px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    background: white;
+    border: 1px solid ${({ theme }) => theme.color.grey_04};
     &.selected {
       font-weight: bold;
       color: #fff;

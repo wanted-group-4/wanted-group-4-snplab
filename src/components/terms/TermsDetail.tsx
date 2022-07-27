@@ -5,7 +5,7 @@ import { MdKeyboardArrowLeft } from 'react-icons/md';
 
 interface TermsProps {
   title: string;
-  handleBackButtonClick: (value: string) => void;
+  handleTermsModalToggle: (value: string) => void;
 }
 
 const TermsTitle = {
@@ -21,12 +21,12 @@ const TermsTitle = {
 
 export default function TermsDetail({
   title,
-  handleBackButtonClick,
+  handleTermsModalToggle,
 }: TermsProps) {
   return (
     <TermsDetailContainer>
       <TermsDetailHeader>
-        <ICon onClick={() => handleBackButtonClick(title)}>
+        <ICon onClick={() => handleTermsModalToggle(title)}>
           <MdKeyboardArrowLeft size={18} />
         </ICon>
         <h2>서비스 이용약관</h2>
