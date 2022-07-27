@@ -4,16 +4,17 @@ import styled from 'styled-components';
 
 interface DownloadProps {
   data: IAdmin[];
+  round: number;
 }
 
-export default function Download({ data }: DownloadProps) {
+export default function Download({ data, round }: DownloadProps) {
   const download = (csvData: string) => {
     const blob = new Blob([`\ufeff${csvData}`], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
 
     link.setAttribute('href', url);
-    link.setAttribute('download', 'download.csv');
+    link.setAttribute('download', `크라우트_워커_지원_현황_${round}차모집`);
     link.click();
   };
 
