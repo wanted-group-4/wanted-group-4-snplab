@@ -78,12 +78,12 @@ root
 │   │    └── terms
 │   │          └── TermsDetail.tsx
 │   │
-│	  ├── constants
+│   ├── constants
 │   │     ├── user.ts
 │   │     ├── admin.ts
 │   │     └── transportation.ts
 │   │
-│	  ├── hooks
+│   ├── hooks
 │   │     ├── useAdminQueries.ts
 │   │     └── useOutsideClick.tsx
 │   ├── pages
