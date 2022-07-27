@@ -221,6 +221,7 @@ export default function User() {
             <Label>
               <span>거주지역</span>
               <input
+                readOnly
                 name="region"
                 ref={regionRef}
                 type="text"
