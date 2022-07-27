@@ -28,6 +28,16 @@ export const fetchUserBySimilarlity = async ({ queryKey }) => {
   return response.data;
 };
 
+export const fetchUserByTransportation = async ({ queryKey }) => {
+  const type = queryKey[1];
+  const condition = queryKey[2].map((item: string) => `(?=.*${item})`).join('');
+  const round = queryKey[3];
+  const response = await axios.get(
+    `${BASE_URL}/users?${type}_like=${condition}&round=${round}&_sort=name`,
+  );
+  return response.data;
+};
+
 export const fetchUserByPeriod = async ({ queryKey }) => {
   const type = queryKey[1];
   const condition = queryKey[2];

@@ -22,6 +22,8 @@ export default function TransportationInput({
     const lastCommaRegex = /,$/;
     const data = value.replace(blankRegex, '').split(',');
 
+    if (value.length === 0) setOptions(transportations);
+
     if (value.match(lastCommaRegex)) {
       if (!transportations.includes(data[data.length - 2]))
         return alert('리스트에 없는 이용수단입니다');

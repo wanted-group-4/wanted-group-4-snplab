@@ -8,16 +8,8 @@ import TransportationInput from '@components/admin/search/TransportationInput';
 import changeDateDBFormat from '@utils/changeDateDBFormat';
 import validateDate from '@utils/validateDate';
 import { IFilter } from '@type/models/filter';
+import { transportations } from '@constants/transportation';
 
-const transportaions = [
-  '버스',
-  '지하철',
-  '택시',
-  'KTX/기차',
-  '도보',
-  '전동킥보드',
-  '자가용',
-];
 const serachError = (type: string) => {
   switch (type) {
     case 'date':
@@ -56,8 +48,8 @@ const changeTransportation = (value: string) => {
     .split(',')
     .map(x => x.trim())
     .filter(item => item !== '');
-  if (!transportaions.includes(array[array.length - 1])) throw new Error();
-  return value;
+  if (!transportations.includes(array[array.length - 1])) throw new Error();
+  return array;
 };
 const transFormInputData = (type: string, value: string) => {
   switch (type) {
