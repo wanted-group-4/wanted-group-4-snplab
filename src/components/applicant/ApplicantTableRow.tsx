@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useQueryClient } from 'react-query';
 
 import { patchUserWin } from '@api/adminApi';
 import { IAdmin } from '@type/models/user';
@@ -10,11 +11,19 @@ interface ApplicationTableRowProps {
 }
 
 function ApplicantTableRow({ user, num }: ApplicationTableRowProps) {
+  const queryClient = useQueryClient();
   const updateWin = patchUserWin();
   const handleWinStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = user.id;
     const win = e.target.checked;
-    updateWin.mutate({ id, win });
+    updateWin.mutate(
+      { id, win },
+      {
+        onSuccess() {
+          queryClient.invalidateQueries('user');
+        },
+      },
+    );
   };
 
   return (
@@ -32,7 +41,7 @@ function ApplicantTableRow({ user, num }: ApplicationTableRowProps) {
         <ListTableTD>
           <WinCheckbox
             type="checkbox"
-            defaultChecked={user.win}
+            checked={user.win}
             onChange={handleWinStatus}
           />
         </ListTableTD>
