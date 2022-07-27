@@ -1,6 +1,7 @@
 import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { RegionSelect } from '@components/region';
 import TermsDetail from '@components/terms/TermsDetail';
@@ -22,8 +23,13 @@ export default function User() {
   const term1Ref = useRef<HTMLInputElement>(null);
   const term2Ref = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
-  const [isClickTerms1, setIsClickTerms1] = useState<boolean>(false);
-  const [isClickTerms2, setIsClickTerms2] = useState<boolean>(false);
+  const [isClickTerms, setIsClickTerms] = useState<{
+    terms1: boolean;
+    terms2: boolean;
+  }>({
+    terms1: false,
+    terms2: false,
+  });
   const [isRegionFocus, setIsRegionFocus] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
@@ -127,23 +133,17 @@ export default function User() {
   );
 
   const handleBackButtonClick = (value: string) => {
-    if (value === TERMS1) {
-      setIsClickTerms1(false);
-    }
-
-    if (value === TERMS2) {
-      setIsClickTerms2(false);
-    }
+    setIsClickTerms({
+      ...isClickTerms,
+      [value]: false,
+    });
   };
 
   const handleTermsDetailClick = (value: string) => {
-    if (value === TERMS1) {
-      setIsClickTerms1(true);
-    }
-
-    if (value === TERMS2) {
-      setIsClickTerms2(true);
-    }
+    setIsClickTerms({
+      ...isClickTerms,
+      [value]: true,
+    });
   };
 
   const handleSubmit = useCallback(
@@ -348,13 +348,13 @@ export default function User() {
           </SubmitWrap>
         </Form>
       </UserWrap>
-      {isClickTerms1 && (
+      {isClickTerms.terms1 && (
         <TermsDetail
           handleBackButtonClick={handleBackButtonClick}
           title={TERMS1}
         />
       )}
-      {isClickTerms2 && (
+      {isClickTerms.terms2 && (
         <TermsDetail
           handleBackButtonClick={handleBackButtonClick}
           title={TERMS2}
