@@ -26,7 +26,7 @@ export default function Admin() {
         <Title>AI 학습용 교통 데이터 수집을 위한 크라우드 워커 지원 현황</Title>
         <SearchContainer>
           <Search handleFilter={handleFilter} />
-          <Download data={data} />
+          <Download data={data} round={round} />
         </SearchContainer>
       </AdminContainer>
       <ApplicantContainer

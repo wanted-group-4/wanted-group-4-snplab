@@ -32,3 +32,13 @@ export const searchSelectOptionList = [
   [TRANSPORTATION, 'transportation'],
   [REGION, 'region'],
 ];
+
+export const placeholder: { [key: string]: string } = {
+  select: '카테고리를 선택해주세요',
+  date: 'YYYY.MM.DD 또는 YYYY.MM.DD ~ YYYY.MM.DD',
+  name: '지원자명을 입력해주세요',
+  gender: '성별을 입력해주세요',
+  birth: 'YYYY.MM.DD',
+  transportation: 'ex 버스,지하철',
+  region: '지역을 입력해주세요',
+};

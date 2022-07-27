@@ -9,30 +9,12 @@ import changeDateDBFormat from '@utils/changeDateDBFormat';
 import validateDate from '@utils/validateDate';
 import { IFilter } from '@type/models/filter';
 import { transportations } from '@constants/transportation';
+import { placeholder } from '@constants/admin';
 
-const serachError = (type: string) => {
-  switch (type) {
-    case 'date':
-      return alert('올바른 형식의 날짜가 아닙니다.');
-    case 'gender':
-      return alert('올바른 형식의 성별이 아닙니다.');
-    case 'birth':
-      return alert('올바른 형식의 생년월일이 아닙니다.');
-    case 'transportation':
-      return alert('리스트에 없는 교통수단입니다');
-    default:
-      return;
-  }
-};
 const changeDate = (value: string) => {
   const date = changeDateDBFormat(value);
-  date.map(item => {
-    validateDate(item);
-  });
-
-  if (date.length === 1) return [date[0], date[0]];
-
-  return date;
+  date.map(item => validateDate(item));
+  return date.length === 1 ? [date[0], date[0]] : date;
 };
 const chagneGender = (value: string) => {
   if (!value.includes('여') && !value.includes('남')) throw Error();
@@ -65,6 +47,20 @@ const transFormInputData = (type: string, value: string) => {
       return value;
   }
 };
+const serachError = (type: string) => {
+  switch (type) {
+    case 'date':
+      return alert('올바른 형식의 날짜가 아닙니다.');
+    case 'gender':
+      return alert('올바른 형식의 성별이 아닙니다.');
+    case 'birth':
+      return alert('올바른 형식의 생년월일이 아닙니다.');
+    case 'transportation':
+      return alert('리스트에 없는 교통수단입니다');
+    default:
+      return;
+  }
+};
 
 interface ISearchProps {
   handleFilter: (value: IFilter) => void;
@@ -78,9 +74,11 @@ export default function Search({ handleFilter }: ISearchProps) {
     setType(event.target.value);
     handleReset();
   };
+
   const handelKeypress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') handleSubmit();
   };
+
   const handleSubmit = () => {
     const value = inputRef.current?.value;
     if (type === 'select') return alert('카테고리를 선택해주세요');
@@ -96,21 +94,13 @@ export default function Search({ handleFilter }: ISearchProps) {
       serachError(type);
     }
   };
+
   const handleReset = () => {
     if (inputRef.current) inputRef.current.value = '';
     handleFilter({
       type: 'select',
       condition: '',
     });
-  };
-  const placeholder: { [key: string]: string } = {
-    select: '카테고리를 선택해주세요',
-    date: 'YYYY.MM.DD 또는 YYYY.MM.DD ~ YYYY.MM.DD',
-    name: '지원자명을 입력해주세요',
-    gender: '성별을 입력해주세요',
-    birth: 'YYYY.MM.DD',
-    transportation: 'ex 버스,지하철',
-    region: '지역을 입력해주세요',
   };
 
   return (
