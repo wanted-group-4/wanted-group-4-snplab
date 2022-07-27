@@ -4,6 +4,7 @@ import {
   fetchUserByFilter,
   fetchUserBySimilarlity,
   fetchUserByPeriod,
+  fetchUserByTransportation,
 } from '@api/adminApi';
 import { IFilter } from '@type/models/filter';
 
@@ -16,7 +17,7 @@ function useAdminQueries(filter: IFilter, round: number) {
     gender: fetchUserByFilter,
     date: fetchUserByPeriod,
     region: fetchUserBySimilarlity,
-    transportation: fetchUserBySimilarlity,
+    transportation: fetchUserByTransportation,
     birth: fetchUserBySimilarlity,
   };
 
