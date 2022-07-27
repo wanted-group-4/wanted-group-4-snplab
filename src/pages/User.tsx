@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-
+import { RegionSelect } from '@components/region';
 import TermsDetail from '@components/terms/TermsDetail';
 import Modal from '@components/common/Modal';
 import { IField } from '@type/models/form';
@@ -22,8 +22,9 @@ export default function User() {
   const term1Ref = useRef<HTMLInputElement>(null);
   const term2Ref = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
-  const [isClickTerms1, setIsClickTerms1] = useState(false);
-  const [isClickTerms2, setIsClickTerms2] = useState(false);
+  const [isClickTerms1, setIsClickTerms1] = useState<boolean>(false);
+  const [isClickTerms2, setIsClickTerms2] = useState<boolean>(false);
+  const [isRegionFocus, setIsRegionFocus] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [open, setOpen] = useState({ visible: false, message: '' });
@@ -35,6 +36,10 @@ export default function User() {
     });
     setIsCompleted(() => result);
   }, [requiredFields, userInfo]);
+
+  const regionRef = useRef<HTMLInputElement | null>(null);
+
+  const handleRegionFocus = () => setIsRegionFocus(prev => !prev);
 
   const handleBlur = event => {
     const field = event.target as IField;
@@ -167,6 +172,12 @@ export default function User() {
     navigate('/admin');
   };
 
+  const completeRegionSelect = (value: string) => {
+    if (!regionRef.current) return;
+    regionRef.current.value = value;
+    handleRegionFocus();
+  };
+
   return (
     <UserContainer>
       <Modal
@@ -209,7 +220,15 @@ export default function User() {
             </Label>
             <Label>
               <span>거주지역</span>
-              <input type="text" name="region" placeholder="거주지역" />
+              <input
+                readOnly
+                name="region"
+                ref={regionRef}
+                type="text"
+                onFocus={handleRegionFocus}
+                required
+                placeholder="거주지역"
+              />
             </Label>
             <Label>
               <span>연락처</span>
@@ -319,6 +338,12 @@ export default function User() {
           title={TERMS2}
         />
       )}
+      {isRegionFocus && (
+        <RegionSelect
+          completeRegionSelect={completeRegionSelect}
+          handleRegionFocus={handleRegionFocus}
+        />
+      )}
     </UserContainer>
   );
 }
@@ -326,7 +351,7 @@ export default function User() {
 const UserContainer = styled.div`
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   border: 1px solid #ccc;
   margin: 0 auto;
   //  overflow-y: scroll;
@@ -337,6 +362,7 @@ const UserContainer = styled.div`
 
 const UserWrap = styled.div`
   width: 100%;
+  height: 100%;
   padding: 25px;
   display: flex;
   flex-direction: column;
