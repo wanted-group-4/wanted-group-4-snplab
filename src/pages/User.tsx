@@ -2,7 +2,7 @@ import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-
+import { RegionSelect } from '@components/region';
 import TermsDetail from '@components/terms/TermsDetail';
 import Modal from '@components/common/Modal';
 import { IField } from '@type/models/form';
@@ -15,15 +15,16 @@ import { requiredFields, defaultState, defaultInfo } from '@constants/user';
 const TERMS1 = 'terms1';
 const TERMS2 = 'terms2';
 
-const User = memo(() => {
+export default function User() {
   const navigate = useNavigate();
   const { mutate } = userInfoMutation();
   const termsRef = useRef<HTMLInputElement>(null);
   const term1Ref = useRef<HTMLInputElement>(null);
   const term2Ref = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
-  const [isClickTerms1, setIsClickTerms1] = useState(false);
-  const [isClickTerms2, setIsClickTerms2] = useState(false);
+  const [isClickTerms1, setIsClickTerms1] = useState<boolean>(false);
+  const [isClickTerms2, setIsClickTerms2] = useState<boolean>(false);
+  const [isRegionFocus, setIsRegionFocus] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [open, setOpen] = useState({ visible: false, message: '' });
@@ -35,14 +36,12 @@ const User = memo(() => {
     });
     if (result === isCompleted) return;
     setIsCompleted(() => result);
-  }, [userInfo]);
+  }, [userInfo, isCompleted]);
 
   const handleBlur = useCallback(
     event => {
       const field = event.target as IField;
-      if (field.nodeName !== 'INPUT') return;
       if (field.value === userInfo[field.name].value) return;
-
       try {
         const fieldResult = checkValid(field);
         setUserInfo(prev => ({
@@ -71,18 +70,20 @@ const User = memo(() => {
       if (event.key === 'Backspace') return;
       const len = event.target.value.length;
       if (len !== 4 && len !== 7) return;
-      console.log('handleBirth');
       event.target.value += '.';
     },
     [],
   );
+
+  const regionRef = useRef<HTMLInputElement | null>(null);
+
+  const handleRegionFocus = () => setIsRegionFocus(prev => !prev);
 
   const handleTransportation = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       const target = event.target as HTMLButtonElement;
       target.classList.toggle('selected');
       const selected = Array.from(target.classList).includes('selected');
-      console.log('handleTransportation');
 
       setUserInfo(prev => ({
         ...prev,
@@ -185,6 +186,20 @@ const User = memo(() => {
     navigate('/admin');
   }, []);
 
+  const completeRegionSelect = (value: string) => {
+    if (!regionRef.current) return;
+    regionRef.current.value = value;
+    handleRegionFocus();
+    setUserInfo(prev => ({
+      ...prev,
+      region: {
+        ...prev.region,
+        isDone: 1,
+        value: value,
+      },
+    }));
+  };
+
   return (
     <UserContainer>
       <Modal
@@ -227,7 +242,15 @@ const User = memo(() => {
             </Label>
             <Label>
               <span>거주지역</span>
-              <input type="text" name="region" placeholder="거주지역" />
+              <input
+                readOnly
+                name="region"
+                ref={regionRef}
+                type="text"
+                onFocus={handleRegionFocus}
+                required
+                placeholder="거주지역"
+              />
             </Label>
             <Label>
               <span>연락처</span>
@@ -337,17 +360,20 @@ const User = memo(() => {
           title={TERMS2}
         />
       )}
+      {isRegionFocus && (
+        <RegionSelect
+          completeRegionSelect={completeRegionSelect}
+          handleRegionFocus={handleRegionFocus}
+        />
+      )}
     </UserContainer>
   );
-});
-
-User.displayName = 'User';
-export default User;
+}
 
 const UserContainer = memo(styled.div`
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   border: 1px solid #ccc;
   margin: 0 auto;
   //  overflow-y: scroll;
@@ -358,6 +384,7 @@ const UserContainer = memo(styled.div`
 
 const UserWrap = memo(styled.div`
   width: 100%;
+  height: 100%;
   padding: 25px;
   display: flex;
   flex-direction: column;
