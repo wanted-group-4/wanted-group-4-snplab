@@ -458,8 +458,10 @@ const ButtonWrap = memo(styled.div`
   gap: 10px;
   margin-bottom: 35px;
   button {
-    padding: 10px 12px;
-    border-radius: 8px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    background: white;
+    border: 1px solid ${({ theme }) => theme.color.grey_04};
     &.selected {
       font-weight: bold;
       color: #fff;
