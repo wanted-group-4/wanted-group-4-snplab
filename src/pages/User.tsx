@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -34,84 +34,97 @@ export default function User() {
     const result = requiredFields.every(fieldName => {
       return userInfo[fieldName].isDone > 0;
     });
+    if (result === isCompleted) return;
     setIsCompleted(() => result);
-  }, [requiredFields, userInfo]);
+  }, [userInfo, isCompleted]);
+
+  const handleBlur = useCallback(
+    event => {
+      const field = event.target as IField;
+      if (field.value === userInfo[field.name].value) return;
+      try {
+        const fieldResult = checkValid(field);
+        setUserInfo(prev => ({
+          ...prev,
+          [field.name]: {
+            ...[field.name],
+            message: fieldResult.message,
+            isDone: 1,
+            value: field.value,
+          },
+        }));
+      } catch (error) {
+        const fieldError = error as Error;
+        setUserInfo(prev => ({
+          ...prev,
+          [field.name]: { ...[field.name], message: fieldError.message },
+        }));
+        field.focus();
+      }
+    },
+    [userInfo],
+  );
+
+  const handleBirth = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Backspace') return;
+      const len = event.target.value.length;
+      if (len !== 4 && len !== 7) return;
+      event.target.value += '.';
+    },
+    [],
+  );
 
   const regionRef = useRef<HTMLInputElement | null>(null);
 
   const handleRegionFocus = () => setIsRegionFocus(prev => !prev);
 
-  const handleBlur = event => {
-    const field = event.target as IField;
-    if (field.nodeName !== 'INPUT') return;
+  const handleTransportation = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      const target = event.target as HTMLButtonElement;
+      target.classList.toggle('selected');
+      const selected = Array.from(target.classList).includes('selected');
 
-    try {
-      const fieldResult = checkValid(field);
       setUserInfo(prev => ({
         ...prev,
-        [field.name]: {
-          ...[field.name],
-          message: fieldResult.message,
-          isDone: 1,
-          value: field.value,
+        transportation: {
+          ...prev.transportation,
+          value: { ...prev.transportation.value, [target.name]: selected },
+          isDone: selected
+            ? prev.transportation.isDone + 1
+            : prev.transportation.isDone - 1,
         },
       }));
-    } catch (error) {
-      const fieldError = error as Error;
-      setUserInfo(prev => ({
-        ...prev,
-        [field.name]: { ...[field.name], message: fieldError.message },
-      }));
-      field.focus();
-    }
-  };
+    },
+    [],
+  );
 
-  const handleBirth = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Backspace') return;
-    const len = event.target.value.length;
-    if (len !== 4 && len !== 7) return;
-    event.target.value += '.';
-  };
+  const handleTerms = useCallback(
+    (event: React.MouseEvent<HTMLInputElement>) => {
+      const target = event.target as HTMLInputElement;
+      const isChecked = target.checked;
 
-  const handleTransportation = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const target = event.target as HTMLButtonElement;
-    target.classList.toggle('selected');
-    const selected = Array.from(target.classList).includes('selected');
+      switch (target.name) {
+        case 'terms':
+          if (term1Ref.current) term1Ref.current.checked = isChecked;
+          if (term2Ref.current) term2Ref.current.checked = isChecked;
+          setIsAgreed(() => isChecked);
+          break;
 
-    setUserInfo(prev => ({
-      ...prev,
-      transportation: {
-        ...prev.transportation,
-        value: { ...prev.transportation.value, [target.name]: selected },
-        isDone: selected
-          ? prev.transportation.isDone + 1
-          : prev.transportation.isDone - 1,
-      },
-    }));
-  };
-
-  const handleTerms = (event: React.MouseEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
-    const isChecked = target.checked;
-
-    switch (target.name) {
-      case 'terms':
-        if (term1Ref.current) term1Ref.current.checked = isChecked;
-        if (term2Ref.current) term2Ref.current.checked = isChecked;
-        setIsAgreed(() => isChecked);
-        break;
-
-      default:
-        if (!(term1Ref.current && term2Ref.current && termsRef.current)) return;
-        if (term1Ref.current.checked && term2Ref.current.checked) {
-          termsRef.current.checked = true;
-          setIsAgreed(() => true);
-        } else {
-          termsRef.current.checked = false;
-          setIsAgreed(() => false);
+        case 'term1':
+        case 'term2': {
+          if (!(term1Ref.current && term2Ref.current && termsRef.current))
+            return;
+          const isAllChecked =
+            term1Ref.current.checked && term2Ref.current.checked;
+          termsRef.current.checked = isAllChecked;
+          if (isAgreed === isAllChecked) return;
+          setIsAgreed(() => isAllChecked);
         }
-    }
-  };
+      }
+    },
+    [termsRef, term1Ref, term2Ref, isAgreed],
+  );
 
   const handleBackButtonClick = (value: string) => {
     if (value === TERMS1) {
@@ -133,49 +146,58 @@ export default function User() {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!isCompleted || !isAgreed) return;
-    const newInfo = defaultInfo;
-    requiredFields.forEach(field => {
-      const currentVal = userInfo[field].value;
-      if (field === 'phone') {
-        newInfo[field] = currentVal.replace(
-          /(\d{3})(\d{4})(\d{4})/g,
-          '$1-$2-$3',
-        );
-        return;
-      }
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault();
+      if (!isCompleted || !isAgreed) return;
+      const newInfo = defaultInfo;
+      requiredFields.forEach(field => {
+        const currentVal = userInfo[field].value;
+        if (field === 'phone') {
+          newInfo[field] = currentVal.replace(
+            /(\d{3})(\d{4})(\d{4})/g,
+            '$1-$2-$3',
+          );
+          return;
+        }
 
-      if (field !== 'transportation') {
-        newInfo[field] = currentVal;
-        return;
-      }
+        if (field !== 'transportation') {
+          newInfo[field] = currentVal;
+          return;
+        }
 
-      Object.values(currentVal).forEach((isSelected, index) => {
-        if (!isSelected) return;
-        const selectedItem = transportations[index] as transport;
-        newInfo[field].push(selectedItem);
+        newInfo[field] = transportations.filter(
+          key => currentVal[key],
+        ) as transport[];
       });
-    });
 
-    mutate(newInfo);
-    setOpen(prev => ({
-      ...prev,
-      visible: true,
-      message: '지원이 완료되었습니다.',
-    }));
-  };
+      mutate(newInfo);
+      setOpen(prev => ({
+        ...prev,
+        visible: true,
+        message: '지원이 완료되었습니다.',
+      }));
+    },
+    [userInfo, isCompleted, isAgreed],
+  );
 
-  const handleModal = () => {
+  const handleModal = useCallback(() => {
     setOpen(prev => ({ ...prev, visible: false }));
     navigate('/admin');
-  };
+  }, []);
 
   const completeRegionSelect = (value: string) => {
     if (!regionRef.current) return;
     regionRef.current.value = value;
     handleRegionFocus();
+    setUserInfo(prev => ({
+      ...prev,
+      region: {
+        ...prev.region,
+        isDone: 1,
+        value: value,
+      },
+    }));
   };
 
   return (
@@ -348,7 +370,7 @@ export default function User() {
   );
 }
 
-const UserContainer = styled.div`
+const UserContainer = memo(styled.div`
   position: relative;
   width: 100%;
   height: 100%;
@@ -358,17 +380,17 @@ const UserContainer = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-`;
+`);
 
-const UserWrap = styled.div`
+const UserWrap = memo(styled.div`
   width: 100%;
   height: 100%;
   padding: 25px;
   display: flex;
   flex-direction: column;
-`;
+`);
 
-const Header = styled.div`
+const Header = memo(styled.div`
   width: 100%;
   margin-bottom: 45px;
   h2 {
@@ -376,37 +398,37 @@ const Header = styled.div`
     font-size: 16px;
     line-height: 23px;
   }
-`;
+`);
 
-const Form = styled.form`
+const Form = memo(styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-`;
+`);
 
-const InfoWrap = styled.div`
+const InfoWrap = memo(styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
   gap: 30px 0;
-`;
+`);
 
-const RadioWrap = styled.div`
+const RadioWrap = memo(styled.div`
   width: 100%;
   display: flex;
-`;
+`);
 
-const Radio = styled.div`
+const Radio = memo(styled.div`
   & + & {
     margin-left: 100px;
   }
   input {
     margin-right: 10px;
   }
-`;
+`);
 
-const Label = styled.label`
+const Label = memo(styled.label`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -422,15 +444,15 @@ const Label = styled.label`
     line-height: 23px;
     border-bottom: 1px solid ${({ theme }) => theme.color.grey_04};
   }
-`;
+`);
 
-const TransportWrap = styled.div`
+const TransportWrap = memo(styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 25px;
-`;
+`);
 
-const ButtonWrap = styled.div`
+const ButtonWrap = memo(styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -444,31 +466,31 @@ const ButtonWrap = styled.div`
       background-color: #4e4e4e;
     }
   }
-`;
+`);
 
-const TitleWrap = styled.div`
+const TitleWrap = memo(styled.div`
   width: 100%;
   margin-bottom: 15px;
-`;
+`);
 
-const Title = styled.div`
+const Title = memo(styled.div`
   font-size: 16px;
   line-height: 23px;
   margin-bottom: 5px;
-`;
+`);
 
-const SubTitle = styled.div`
+const SubTitle = memo(styled.div`
   font-size: 14px;
   line-height: 20px;
   color: ${({ theme }) => theme.color.grey_05};
-`;
+`);
 
-const TermsWrap = styled.div`
+const TermsWrap = memo(styled.div`
   width: 100%;
   margin-bottom: 30px;
-`;
+`);
 
-const AgreementAll = styled.div`
+const AgreementAll = memo(styled.div`
   padding-bottom: 10px;
   border-bottom: 1px solid ${({ theme }) => theme.color.grey_06};
   input {
@@ -478,9 +500,9 @@ const AgreementAll = styled.div`
     font-size: 16px;
     line-height: 23px;
   }
-`;
+`);
 
-const AgreementRequired = styled.div`
+const AgreementRequired = memo(styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 15px;
@@ -491,13 +513,13 @@ const AgreementRequired = styled.div`
     font-size: 16px;
     line-height: 23px;
   }
-`;
+`);
 
-const ICon = styled.div`
+const ICon = memo(styled.div`
   cursor: pointer;
-`;
+`);
 
-const SubmitWrap = styled.div`
+const SubmitWrap = memo(styled.div`
   width: 100%;
   button {
     width: 100%;
@@ -512,9 +534,9 @@ const SubmitWrap = styled.div`
       background: #eee;
     }
   }
-`;
+`);
 
-const Message = styled.span`
+const Message = memo(styled.span`
   padding-top: 12px;
   font-size: 12px;
   &.isDone {
@@ -523,4 +545,4 @@ const Message = styled.span`
   &.yet {
     color: red;
   }
-`;
+`);
