@@ -31,8 +31,8 @@ export default function User() {
     terms2: false,
   });
   const [isRegionFocus, setIsRegionFocus] = useState<boolean>(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [isAgreed, setIsAgreed] = useState(false);
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [isAgreed, setIsAgreed] = useState<boolean>(false);
   const [open, setOpen] = useState({ visible: false, message: '' });
   const [userInfo, setUserInfo] = useState(defaultState);
 
