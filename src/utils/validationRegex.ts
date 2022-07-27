@@ -1,5 +1,6 @@
+import { differenceInDays } from 'date-fns';
 import { IField } from '@type/models/form';
-import RegexException from '@src/utils/validationException';
+import RegexException from '@utils/validationException';
 
 const isEmptyString = (content: unknown) => {
   return typeof content === 'string' && content.trim().length === 0;
@@ -29,13 +30,6 @@ class ValidationRegex {
   isValidLength(field: IField, minLen: number, maxLen: number, msg?: string) {
     this.minLength(field, minLen, msg);
     this.maxLength(field, maxLen, msg);
-    return true;
-  }
-
-  isIdentical(origin: IField, target: IField, msg = '') {
-    if (origin.value.trim() !== target.value.trim()) {
-      throw new RegexException(msg, origin);
-    }
     return true;
   }
 
@@ -74,6 +68,18 @@ class ValidationRegex {
       msg,
       /^\d{4}.(0[1-9]|1[012]).(0[1-9]|[12][0-9]|3[01])$/,
     );
+  }
+
+  isDateInRange(field: IField, lessMsg = '', overMsg = '') {
+    const date = new Date(field.value);
+    const minDate = new Date('1900.01.01');
+    const current = new Date();
+    if (differenceInDays(date, minDate) < 0) {
+      throw new RegexException(lessMsg, field);
+    } else if (differenceInDays(current, date) < 0) {
+      throw new RegexException(overMsg, field);
+    }
+    return true;
   }
 }
 
