@@ -72,10 +72,12 @@ const PickerItem = styled.li<{ itemHeight: number; isFocus: boolean }>`
   justify-content: center;
   font-size: 16px;
   min-height: ${props => props.itemHeight + 'px'};
-  background: ${props => props.isFocus && props.theme.color.grey_03};
+  background: ${props => props.isFocus && props.theme.color.grey_02};
+  color: ${props =>
+    props.isFocus ? props.theme.color.black : props.theme.color.grey_04};
   cursor: pointer;
   border-radius: 10px;
   :hover {
-    ${({ theme }) => theme.color.grey_04};
+    color: ${({ theme }) => theme.color.black};
   }
 `;
