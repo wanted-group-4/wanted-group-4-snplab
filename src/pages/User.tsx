@@ -1,7 +1,6 @@
 import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { RegionSelect } from '@components/region';
 import TermsDetail from '@components/terms/TermsDetail';
@@ -132,17 +131,10 @@ export default function User() {
     [termsRef, term1Ref, term2Ref, isAgreed],
   );
 
-  const handleBackButtonClick = (value: string) => {
+  const handleTermsModalToggle = (value: string) => {
     setIsClickTerms({
       ...isClickTerms,
-      [value]: false,
-    });
-  };
-
-  const handleTermsDetailClick = (value: string) => {
-    setIsClickTerms({
-      ...isClickTerms,
-      [value]: true,
+      [value]: !isClickTerms[value],
     });
   };
 
@@ -322,7 +314,7 @@ export default function User() {
                 <input type="checkbox" name="term1" ref={term1Ref} />
                 <span>개인정보 처리방침 고지 (필수)</span>
               </label>
-              <ICon onClick={() => handleTermsDetailClick(TERMS1)}>
+              <ICon onClick={() => handleTermsModalToggle(TERMS1)}>
                 <MdKeyboardArrowRight size={18} />
               </ICon>
             </AgreementRequired>
@@ -331,7 +323,7 @@ export default function User() {
                 <input type="checkbox" name="term2" ref={term2Ref} />
                 <span>제3자 정보제공 동의 (필수)</span>
               </label>
-              <ICon onClick={() => handleTermsDetailClick(TERMS2)}>
+              <ICon onClick={() => handleTermsModalToggle(TERMS2)}>
                 <MdKeyboardArrowRight size={18} />
               </ICon>
             </AgreementRequired>
@@ -350,13 +342,13 @@ export default function User() {
       </UserWrap>
       {isClickTerms.terms1 && (
         <TermsDetail
-          handleBackButtonClick={handleBackButtonClick}
+          handleTermsModalToggle={handleTermsModalToggle}
           title={TERMS1}
         />
       )}
       {isClickTerms.terms2 && (
         <TermsDetail
-          handleBackButtonClick={handleBackButtonClick}
+          handleTermsModalToggle={handleTermsModalToggle}
           title={TERMS2}
         />
       )}
