@@ -11,12 +11,12 @@
 ## 2. 역할
 |이름|역할|github|
 |---|---|---|
-|이가람|--|https://github.com/devmagrfs|
-|박소영|--|https://github.com/soyoung931014|
-|이미림|--|https://github.com/mrlee323|
-|서소희|--|https://github.com/greenish0902|
-|성열하|--|https://github.com/Hotsumm|
-|박지훈|--|https://github.com/JiehoonPark|
+|이가람|admin 페이지 테이블 리스트|https://github.com/devmagrfs|
+|박소영|api, 절대경로 설정, 개인정보 처리방침, 정보제공 페이지, 보일러 플레이트 및 초기 세팅|https://github.com/soyoung931014|
+|이미림|디자인 목업, 전체 레이아웃, 검색 input 필터링 및 ui, 엑셀 다운로드|https://github.com/mrlee323|
+|서소희|user 페이지 유효성 검사, form 전체 담당|https://github.com/greenish0902|
+|성열하|user 페이지 UI 및 거주지역 선택 모달, 개인정보 처리방침 페이지|https://github.com/Hotsumm|
+|박지훈|api, 글로벌 타입 선언|https://github.com/JiehoonPark|
 
 <br>
 
