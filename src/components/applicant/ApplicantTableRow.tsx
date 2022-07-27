@@ -23,7 +23,7 @@ function ApplicantTableRow({ user, num }: ApplicationTableRowProps) {
         <ListTableTD>{num + 1}</ListTableTD>
         <ListTableTD>{user.date}</ListTableTD>
         <ListTableTD>{user.name}</ListTableTD>
-        <ListTableTD>{user.gender}</ListTableTD>
+        <ListTableTD>{user.gender === 'female' ? '여' : '남'}</ListTableTD>
         <ListTableTD>{user.birth}</ListTableTD>
         <ListTableTD>{user.phone}</ListTableTD>
         <ListTableTD>{user.email}</ListTableTD>
@@ -32,7 +32,7 @@ function ApplicantTableRow({ user, num }: ApplicationTableRowProps) {
         <ListTableTD>
           <WinCheckbox
             type="checkbox"
-            defaultChecked={user.win}
+            checked={user.win}
             onChange={handleWinStatus}
           />
         </ListTableTD>

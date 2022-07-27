@@ -68,6 +68,6 @@ export const patchUserWin = () => {
 
   const queryClient = useQueryClient();
   return useMutation(fetch, {
-    onSuccess: () => queryClient.invalidateQueries('users'),
+    onSuccess: () => queryClient.invalidateQueries('user'),
   });
 };
