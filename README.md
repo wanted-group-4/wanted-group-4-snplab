@@ -2,22 +2,28 @@
 
 ## 🚀🚀 [배포](https://wanted-group-4-snplab.vercel.app/)
 
+<br />
+
 ## 1. 소개
 
 - 원티드 프리온보딩 5기 기업 과제
 - admin 페이지 만들기
 - 기간 : 2022/07/21 ~ 2022/07/27 (3-2 ~ 4-1주차)
 
+<br />
+
 ## 2. 역할
 
-| Task |  담당자 | 상세 설명 | 추가 기여사항 |
+| <div style="width:96px">Task</div> | <div style="width:42px">담당자</div> | 상세 설명 | 추가 기여사항 |
 | --- | --- | --- | --- |
-| API 개발 | [박소영](https://github.com/soyoung931014) | @tanstack/react-query를 이용한 api 개발, 개인정보 처리방침 및 정보제공 페이지 데이터 제공 | 보일러 플레이트, 초기 세팅, 절대경로 설정 |
-| API 개발 | [박지훈](https://github.com/JiehoonPark) | @tanstack/react-query를 이용한 api 개발 | 글로벌 타입 정의 |
-| User 페이지 | [서소희](https://github.com/greenish0902) | user 페이지 유효성 검사, 입력 폼 정보 저장 |  |
-| User 페이지 | [성열하](https://github.com/Hotsumm) | user 페이지 UI 구현, 거주지역 선택 모달, 개인정보 처리방침 페이지 |  |
-| Admin 페이지 | [이미림](https://github.com/mrlee323) | admin 페이지 레이아웃, 검색 input 필터링, 엑셀 다운로드 | figma를 이용한 목업 디자인, 모바일/앱 기본 레이아웃 구현 |
-| Admin 페이지 | [이가람](https://github.com/devmagrfs) | admin 페이지 테이블 레이아웃 및 리스트 구현 | vercel 배포 |
+| **API 개발** | [박소영](https://github.com/soyoung931014) | @tanstack/react-query를 이용한 api 개발, 개인정보 처리방침 및 정보제공 페이지 데이터 제공 | 보일러 플레이트, 초기 세팅, 절대경로 설정 |
+| **API 개발** | [박지훈](https://github.com/JiehoonPark) | @tanstack/react-query를 이용한 api 개발 | 글로벌 타입 정의 |
+| **User 페이지** | [서소희](https://github.com/greenish0902) | user 페이지 유효성 검사, 입력 폼 정보 저장 |  |
+| **User 페이지** | [성열하](https://github.com/Hotsumm) | user 페이지 UI 구현, 거주지역 선택 모달, 개인정보 처리방침 페이지 |  |
+| **Admin 페이지** | [이미림](https://github.com/mrlee323) | admin 페이지 레이아웃, 검색 input 필터링, 엑셀 다운로드 | figma를 이용한 목업 디자인, 모바일/앱 기본 레이아웃 구현 |
+| **Admin 페이지** | [이가람](https://github.com/devmagrfs) | admin 페이지 테이블 레이아웃 및 리스트 구현 | vercel 배포 |
+
+<br />
 
 ## 3. 실행 방법
 
@@ -33,6 +39,8 @@ $ yarn server
 $ yarn start
 ```
 
+<br />
+
 ## 4. 기술 스택
 
 - **TypeScript & ReactJS (Create React App with yarn)**
@@ -42,6 +50,8 @@ $ yarn start
 - **[Icons]** react-icons
 - **[Date]** date-fns
 - **[State]** @tanstack/react-query
+
+<br />
 
 ## 5. 프로젝트 구조
 
@@ -124,21 +134,46 @@ root
 │   └── index.tsx
 ```
 
+<br />
+
 ## ✨ 6. Keypoints
 
-### form 페이지
+### 💡 form 페이지
 
 > **사용자와의 즉각적인 인터렉션 구현!**
 
 - onBlur 함수를 이용해 `input` 창의 `focus` 가 해제되면 사용자에게 즉각적인 피드백을 주도록 구현했습니다. 에러가 발생하는 경우, case에 적절한 에러 메시지를 전달해 줍니다.
+- 모든 폼을 기입 완료해야 지원 가능하며, 작성된 정보는 db에 저장됩니다.
 
-### admin 페이지
+<div align="center">
+  <img width="32%" src="https://user-images.githubusercontent.com/87647245/183841934-47957ba2-431a-4a44-9bf6-bda784f2879c.png" />
+  <img width="34%" src="https://user-images.githubusercontent.com/87647245/183841932-94496938-de10-45dd-b6a5-019365d44cc1.png" />
+</div>
+
+<br/>
+
+<div align="center">
+  <img width="40%" src="https://user-images.githubusercontent.com/87647245/183841928-d6c38b2a-8439-4324-a71f-9c9ddf80b185.png" />
+  <img width="26%" src="https://user-images.githubusercontent.com/87647245/183841936-49c6c825-f092-455b-a3f8-736f69f06fed.png" />
+</div>
+
+<br />
+
+### 💡 admin 페이지
 
 > **사용자의 편의를 고려한 필터링!**
 
 - 입력시에 다중 선택이 가능했던 이용수단의 경우, 다중 검색이 가능하도록 구현했습니다. 여러 이용수단 중 선택한 이용수단 외에 후보가 될 수 있는 이용수단을 제시해 주어, 타이핑 또는 직접 선택을 통해 검색이 가능합니다.
+- 당첨 여부는 즉시 반영됩니다.
+- 엑셀 다운로드 버튼을 클릭하면 현재 보이는 데이터를 다운받을 수 있습니다.
 
-### api 제작
+<div align="center">
+  <img width="72%" src="https://user-images.githubusercontent.com/87647245/183841938-23fd3ef7-19f7-44bd-85bd-0fe34ba2b676.png" />
+</div>
+
+<br />
+
+### 💡 api 제작
 
 > **react-query 기반의 서버 데이터 흐름을 고려한 구현!**
 
