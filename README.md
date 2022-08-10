@@ -10,6 +10,8 @@
 - admin 페이지 만들기
 - 기간 : 2022/07/21 ~ 2022/07/27
 
+
+
 <br>
 
 ## 2. 역할
@@ -24,19 +26,33 @@
 
 <br>
 
-## 3. 기술 스택
+## 3. 실행 방법
+
+
+```shell
+# with yarn
+# install
+$ yarn install
+
+# run json-server
+$ yarn server
+
+# run
+$ yarn start
+```
+</br>
+
+## 4. 기술 스택
 - React
 - Typescript
 - react-query
 - axios
 - styled-components
-- date-fns
 - json-server
-- react-icons
 
 <br>
 
-## 4. 프로젝트 구조
+## 5. 프로젝트 구조
 
 ```
 root
@@ -116,3 +132,11 @@ root
 │   ├── App.tsx
 │   └── index.tsx
 ```
+
+
+
+<br>
+
+
+
+
